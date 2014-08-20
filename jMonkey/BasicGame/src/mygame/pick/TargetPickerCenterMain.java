@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mygame;
+package mygame.pick;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.collision.CollisionResult;
@@ -11,15 +11,15 @@ import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.AnalogListener;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Ray;
-import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
+import mygame.Utils;
 
 /**
  *
  * @author qinghai
  */
-public class CubeLookAtCursorMain extends SimpleApplication {
+public class TargetPickerCenterMain extends SimpleApplication {
 
     private Geometry selected;
     private ActionListener colorListener = new ActionListener() {
@@ -40,12 +40,7 @@ public class CubeLookAtCursorMain extends SimpleApplication {
         public void onAction(String name, boolean isPressed, float tpf) {
             if (!isPressed) {
                 CollisionResults results = new CollisionResults();
-
-                Vector2f click2d = inputManager.getCursorPosition();
-                Vector3f click3d = cam.getWorldCoordinates(click2d, 0);
-                Vector3f dir = cam.getWorldCoordinates(click2d, 1).subtract(click3d);
-
-                Ray ray = new Ray(click3d, dir);
+                Ray ray = new Ray(cam.getLocation(), cam.getDirection());
                 rootNode.collideWith(ray, results);
                 for (CollisionResult r : results) {
                     float dist = r.getDistance();
@@ -74,22 +69,18 @@ public class CubeLookAtCursorMain extends SimpleApplication {
         rootNode.attachChild(Utils.createBoxGeom1(assetManager, "Red Cube", new Vector3f(0, 1.5f, 0), ColorRGBA.Red));
         rootNode.attachChild(Utils.createBoxGeom1(assetManager, "Blue Cube", new Vector3f(0, -1.5f, 0), ColorRGBA.Blue));
 
-        flyCam.setDragToRotate(true);
-        inputManager.setCursorVisible(true);
+        attachCenterMark();
     }
 
-    @Override
-    public void simpleUpdate(float tpf) {
-        Vector2f cursor2d = inputManager.getCursorPosition();
-        Vector3f cursor3d = cam.getWorldCoordinates(cursor2d, 0);
-        
-        if (selected != null) {
-            selected.lookAt(cursor3d, Vector3f.UNIT_Y);
-        }
+    private void attachCenterMark() {
+        Geometry c = Utils.createBoxGeom1(assetManager, "Center Mark", Vector3f.ZERO, ColorRGBA.White);
+        c.scale(4);
+        c.setLocalTranslation(settings.getWidth() / 2, settings.getHeight() / 2, 0);
+        guiNode.attachChild(c);
     }
 
     public static void main(String[] args) {
-        CubeLookAtCursorMain app = new CubeLookAtCursorMain();
+        TargetPickerCenterMain app = new TargetPickerCenterMain();
         app.start();
     }
 }
