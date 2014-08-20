@@ -41,20 +41,15 @@ public class TargetPickerCenterMain extends SimpleApplication {
                 CollisionResults results = new CollisionResults();
                 Ray ray = new Ray(cam.getLocation(), cam.getDirection());
                 rootNode.collideWith(ray, results);
-                Geometry closest = null;
-                float closestDist = Float.MAX_VALUE;
                 for (CollisionResult r : results) {
                     float dist = r.getDistance();
-                    if (dist<closestDist) {
-                        closestDist = dist;
-                        closest = r.getGeometry();
-                    }
                     Vector3f pt = r.getContactPoint();
                     String target = r.getGeometry().getName();
                     System.out.println("Collision: " + target + " at " + pt + ", " + dist + " WU away.");
                 }
+                CollisionResult closest = results.getClosestCollision();
                 if (closest != null) {
-                    selected = closest;
+                    selected = closest.getGeometry();
                 } else {
                     System.out.println("Selected nothing!");
                 }
