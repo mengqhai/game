@@ -40,6 +40,8 @@ public class CubeChaserControl extends AbstractControl{
             Geometry target = results.getClosestCollision().getGeometry();
             if (target.equals(spatial)) {
                 if (cam.getLocation().distance(spatial.getLocalTranslation())<10) {
+                    float rotateRad = tpf * 10;
+                    spatial.rotate(rotateRad, rotateRad, rotateRad);
                     spatial.move(cam.getDirection());
                 }
             }
