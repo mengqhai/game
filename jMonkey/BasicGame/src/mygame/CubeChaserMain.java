@@ -1,7 +1,9 @@
 package mygame;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.collision.CollisionResults;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Geometry;
@@ -15,6 +17,8 @@ import java.util.List;
 public class CubeChaserMain extends SimpleApplication {
     
     private Geometry scaredCube;
+    
+    private Ray ray = new Ray();
 
     public static void main(String[] args) {
         AppSettings settings = new AppSettings(true);
@@ -38,8 +42,21 @@ public class CubeChaserMain extends SimpleApplication {
 
     @Override
     public void simpleUpdate(float tpf) {
-        if (cam.getLocation().distance(scaredCube.getLocalTranslation())<10) {
-            scaredCube.move(cam.getDirection());
+        // chase the scared cube
+//        if (cam.getLocation().distance(scaredCube.getLocalTranslation())<10) {
+//            scaredCube.move(cam.getDirection());
+//        }
+        
+        // chase all the cubes
+        CollisionResults results = new CollisionResults();
+        ray.setOrigin(cam.getLocation());
+        ray.setDirection(cam.getDirection());
+        rootNode.collideWith(ray, results);
+        if (results.size()>0) {
+            Geometry target = results.getClosestCollision().getGeometry();
+            if (cam.getLocation().distance(target.getLocalTranslation())<10) {
+                target.move(cam.getDirection());
+            }
         }
     }
 
