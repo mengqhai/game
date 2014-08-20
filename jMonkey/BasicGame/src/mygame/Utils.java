@@ -27,9 +27,11 @@ public class Utils {
     public final static Trigger TRIGGER_COLOR = new KeyTrigger(KeyInput.KEY_SPACE);
     
     public final static Trigger TRIGGER_ROTATE = new MouseButtonTrigger(MouseInput.BUTTON_RIGHT);
+    public final static Trigger TRIGGER_SELECT =  new MouseButtonTrigger(MouseInput.BUTTON_LEFT);
     
     public final static String MAPPING_COLOR = "Toggle Color";
     public final static String MAPPING_ROTATE = "Rotate";
+    public final static String MAPPING_SELECT = "Select";
     
     public static Geometry createBoxGeom1(AssetManager assetManager, String name, Vector3f loc, ColorRGBA color) {
         Geometry geom = new Geometry(name, BOX1);
