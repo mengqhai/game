@@ -17,6 +17,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
 import mygame.Utils;
 import mygame.towerdefence.data.CreepData;
+import mygame.towerdefence.data.DataService;
 import mygame.towerdefence.data.PlayerData;
 import mygame.towerdefence.data.TowerData;
 
@@ -43,8 +44,9 @@ public class GamePlayAppState extends AbstractAppState{
     
     private void initPlayer() {
         playerNode = new Node();
-        Geometry player = Utils.createBoxGeomLong(assetManager, "Player", new Vector3f(0, 0.5f, 0), ColorRGBA.Yellow);
-        player.setUserData(PlayerData.KEY, new PlayerData());
+        String name = "Player";
+        Geometry player = Utils.createBoxGeomLong(assetManager, name, new Vector3f(0, 0.5f, 0), ColorRGBA.Yellow);
+        player.setUserData(PlayerData.KEY, DataService.INSTANCE.createPlayerData(name));
         playerNode.attachChild(player);
         rootNode.attachChild(playerNode);
     }
@@ -56,8 +58,9 @@ public class GamePlayAppState extends AbstractAppState{
     }
     
     private void addTower(float x, float z, Node node, int index) {
-        Geometry tower = Utils.createBoxGeomTall(assetManager, "Tower "+index, new Vector3f(x, 1, z), ColorRGBA.Green);
-        tower.setUserData(TowerData.KEY, new TowerData());
+        String name = "Tower "+index;
+        Geometry tower = Utils.createBoxGeomTall(assetManager, name, new Vector3f(x, 1, z), ColorRGBA.Green);
+        tower.setUserData(TowerData.KEY, DataService.INSTANCE.createTowerData(name));
         node.attachChild(tower);
     }
     
@@ -68,8 +71,9 @@ public class GamePlayAppState extends AbstractAppState{
     }
     
     private void addCreep(float x, float z, Node node, int index) {
-        Geometry creep = Utils.createBoxGeom1(assetManager, "Creep "+index, new Vector3f(x, 0.5f, z), ColorRGBA.Black);
-        creep.setUserData(CreepData.KEY, new CreepData());
+        String name = "Creep "+index;
+        Geometry creep = Utils.createBoxGeom1(assetManager, name, new Vector3f(x, 0.5f, z), ColorRGBA.Black);
+        creep.setUserData(CreepData.KEY, DataService.INSTANCE.createTowerData(name));
         node.attachChild(creep);
     }
 

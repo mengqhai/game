@@ -12,6 +12,10 @@ public class TowerData {
     public static final String KEY = "TowerData";
     
     private int index, chargesNum;
+    
+    TowerData() {
+        
+    }
 
     public int getIndex() {
         return index;

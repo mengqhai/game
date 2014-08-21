@@ -13,6 +13,9 @@ public class CreepData {
     
     private int index, health;
 
+    CreepData() {
+    }
+
     public int getIndex() {
         return index;
     }

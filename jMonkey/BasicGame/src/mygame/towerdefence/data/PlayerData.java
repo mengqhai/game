@@ -14,6 +14,10 @@ public class PlayerData {
     
     private int level, score, health, budget;
     private boolean lastGameWon;
+    
+    PlayerData() {
+        
+    }
 
     public int getLevel() {
         return level;
@@ -54,4 +58,8 @@ public class PlayerData {
     public void setLastGameWon(boolean lastGameWon) {
         this.lastGameWon = lastGameWon;
     }
+    
+    public synchronized void healthDecrease(int num) {
+        this.health = this.health - num;
+    } 
 }
