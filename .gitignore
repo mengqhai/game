@@ -14,3 +14,4 @@ hs_err_pid*
 /jMonkey/*/nbproject/**
 /jMonkey/*/build/**
 **/private.properties
+jMonkey/**/private.properties
