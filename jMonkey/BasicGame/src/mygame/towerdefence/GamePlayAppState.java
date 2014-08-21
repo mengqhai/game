@@ -16,6 +16,9 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
 import mygame.Utils;
+import mygame.towerdefence.data.CreepData;
+import mygame.towerdefence.data.PlayerData;
+import mygame.towerdefence.data.TowerData;
 
 /**
  *
@@ -41,18 +44,20 @@ public class GamePlayAppState extends AbstractAppState{
     private void initPlayer() {
         playerNode = new Node();
         Geometry player = Utils.createBoxGeomLong(assetManager, "Player", new Vector3f(0, 0.5f, 0), ColorRGBA.Yellow);
+        player.setUserData(PlayerData.KEY, new PlayerData());
         playerNode.attachChild(player);
         rootNode.attachChild(playerNode);
     }
     
     private void initTower() {
-        towerNode = new Node();;
+        towerNode = new Node();
         addTower(-5, 10, towerNode, 0);
         rootNode.attachChild(towerNode);
     }
     
     private void addTower(float x, float z, Node node, int index) {
         Geometry tower = Utils.createBoxGeomTall(assetManager, "Tower "+index, new Vector3f(x, 1, z), ColorRGBA.Green);
+        tower.setUserData(TowerData.KEY, new TowerData());
         node.attachChild(tower);
     }
     
@@ -64,6 +69,7 @@ public class GamePlayAppState extends AbstractAppState{
     
     private void addCreep(float x, float z, Node node, int index) {
         Geometry creep = Utils.createBoxGeom1(assetManager, "Creep "+index, new Vector3f(x, 0.5f, z), ColorRGBA.Black);
+        creep.setUserData(CreepData.KEY, new CreepData());
         node.attachChild(creep);
     }
 
