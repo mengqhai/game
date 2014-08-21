@@ -17,8 +17,8 @@ public class PlayerData implements Savable{
     
     public static final String KEY = "PlayerData";
     
-    private int level, score, health = 100, budget = 100;
-    private boolean lastGameWon;
+    private volatile int level, score, health = 8, budget = 100;
+    private volatile boolean lastGameWon;
     
     PlayerData() {
         

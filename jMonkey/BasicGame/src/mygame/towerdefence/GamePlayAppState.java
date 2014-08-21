@@ -11,6 +11,7 @@ import com.jme3.app.state.AppStateManager;
 import com.jme3.asset.AssetManager;
 import com.jme3.input.InputManager;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Geometry;
@@ -41,6 +42,7 @@ public class GamePlayAppState extends AbstractAppState{
     private InputManager inputManager;
     private Camera cam;
     private Node rootNode, playerNode, creepNode, towerNode, beamNode;
+    private PlayerData playerData;
     
     private Selection selection = new Selection();
 
@@ -57,14 +59,20 @@ public class GamePlayAppState extends AbstractAppState{
         playerNode = new Node();
         String name = "Player";
         Geometry player = Utils.createBoxGeomLong(assetManager, name, new Vector3f(0, 0.5f, 0), ColorRGBA.Yellow);
-        player.setUserData(PlayerData.KEY, DataService.INSTANCE.createPlayerData(name));
+        playerData = DataService.INSTANCE.createPlayerData(name);
+        player.setUserData(PlayerData.KEY, playerData);
         playerNode.attachChild(player);
         rootNode.attachChild(playerNode);
     }
     
     private void initTower() {
         towerNode = new Node();
-        addTower(-5, 10, towerNode, 0);
+        int totalTowers = 6;
+        for (int i=0;i<totalTowers;i++) {
+            int x = FastMath.nextRandomInt(-5, 5);
+            int z = FastMath.nextRandomInt(0, 16);
+            addTower(x, z, towerNode, 0);
+        }
         rootNode.attachChild(towerNode);
     }
     
@@ -73,7 +81,7 @@ public class GamePlayAppState extends AbstractAppState{
         Geometry tower = Utils.createBoxGeomTall(assetManager, name, new Vector3f(x, 1, z), ColorRGBA.Green);
         TowerData tData = DataService.INSTANCE.createTowerData(name);
         tower.setUserData(TowerData.KEY, tData);
-        for (int i=0;i<1;i++) {
+        for (int i=0;i<1000;i++) {
             // some test charges
             tData.getCharges().add(new Charge());
         }
@@ -84,7 +92,10 @@ public class GamePlayAppState extends AbstractAppState{
     
     private void initCreep() {
         creepNode = new Node();
-        addCreep(0, 16, creepNode, 0);
+        int totalCreepCount = 10;
+        for (int i=0;i<totalCreepCount;i++) {
+            addCreep(FastMath.nextRandomFloat()*SCENE_WIDE*2 - SCENE_WIDE, SCENE_WIDE*2, creepNode, i);
+        }
         rootNode.attachChild(creepNode);
     }
     
@@ -117,6 +128,8 @@ public class GamePlayAppState extends AbstractAppState{
         assetManager = sApp.getAssetManager();
         inputManager = sApp.getInputManager();
         cam = sApp.getCamera();
+        cam.setLocation(new Vector3f(0, SCENE_WIDE*2, SCENE_WIDE*2));
+        cam.lookAt(new Vector3f(0, 0, SCENE_WIDE), Vector3f.UNIT_Y);
         sApp.getFlyByCamera().setMoveSpeed(50);
         sApp.getFlyByCamera().setDragToRotate(true);
         inputManager.setCursorVisible(true);
@@ -135,7 +148,11 @@ public class GamePlayAppState extends AbstractAppState{
 
     @Override
     public void update(float tpf) {
-        super.update(tpf);
+        if (playerData.getHealth()<=0) {
+            System.out.println("Game over");
+            playerData.setLastGameWon(false);
+            // TODO detach the state
+        }
     }
     
     

@@ -17,7 +17,7 @@ public class CreepData implements Savable {
 
     public static final String KEY = "CreepData";
     private int index, health = 10;
-    private int bonus = 3;
+    private int bonus = 8;
 
     CreepData() {
     }
