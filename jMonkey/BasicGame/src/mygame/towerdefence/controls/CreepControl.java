@@ -17,10 +17,10 @@ import mygame.towerdefence.data.PlayerData;
  *
  * @author liuli
  */
-public class CreepControl extends AbstractControl{
+public class CreepControl extends AbstractControl {
     
     private Node creepNode;
-
+    
     public CreepControl(Node creepNode) {
         this.creepNode = creepNode;
     }
@@ -33,24 +33,33 @@ public class CreepControl extends AbstractControl{
         CreepData cData = spatial.getUserData(CreepData.KEY);
         return cData.getHealth() > 0;
     }
-
+    
     @Override
     protected void controlUpdate(float tpf) {
+        PlayerData playerData = DataService.INSTANCE.getData("Player");
         if (isStromed()) {
             // I've stormed the player base
-            PlayerData playerData = DataService.INSTANCE.getData("Player");
             playerData.healthDecrease(1);
             creepNode.detachChild(spatial);
-        } else if (isAlive()) {
+            System.out.println(spatial.getName()+" have stormed the base.");
+        }
+        
+        if (isAlive()) {
             // Alive creep moves to the base
-            Vector3f dir = Vector3f.ZERO.subtract(spatial.getLocalTranslation());
+            Vector3f endPoint = Vector3f.ZERO;
+            Vector3f dir = endPoint.subtract(spatial.getLocalTranslation());
             dir = dir.divide(dir.length()); //make the dir a unit vector
             spatial.move(dir.mult(tpf));
+        } else {
+            // die
+            CreepData cData = spatial.getUserData(CreepData.KEY);
+            playerData.addBudget(cData.getBonus());
+            creepNode.detachChild(spatial);
+            System.out.println(spatial.getName()+" is dead.");
         }
     }
-
+    
     @Override
     protected void controlRender(RenderManager rm, ViewPort vp) {
     }
-    
 }

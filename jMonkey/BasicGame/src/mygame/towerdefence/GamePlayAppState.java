@@ -16,6 +16,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
 import mygame.Utils;
+import mygame.towerdefence.controls.CreepControl;
 import mygame.towerdefence.data.CreepData;
 import mygame.towerdefence.data.DataService;
 import mygame.towerdefence.data.PlayerData;
@@ -73,7 +74,8 @@ public class GamePlayAppState extends AbstractAppState{
     private void addCreep(float x, float z, Node node, int index) {
         String name = "Creep "+index;
         Geometry creep = Utils.createBoxGeom1(assetManager, name, new Vector3f(x, 0.5f, z), ColorRGBA.Black);
-        creep.setUserData(CreepData.KEY, DataService.INSTANCE.createTowerData(name));
+        creep.setUserData(CreepData.KEY, DataService.INSTANCE.createCreepData(name));
+        creep.addControl(new CreepControl(creepNode));
         node.attachChild(creep);
     }
 
