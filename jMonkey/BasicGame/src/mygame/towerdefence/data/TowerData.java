@@ -18,7 +18,7 @@ import java.util.List;
 public class TowerData  implements Savable{
     public static final String KEY = "TowerData";
     
-    private int index, chargesNum=20, range = 100, shootInterval = 2000;
+    private int index, range = 8, shootInterval = 2000;
     
     private List<Charge> charges = new ArrayList<Charge>();
     
@@ -33,14 +33,6 @@ public class TowerData  implements Savable{
     public void setIndex(int index) {
         this.index = index;
     }
-
-//    public int getChargesNum() {
-//        return chargesNum;
-//    }
-//
-//    public void setChargesNum(int chargesNum) {
-//        this.chargesNum = chargesNum;
-//    }
 
     public int getRange() {
         return range;
