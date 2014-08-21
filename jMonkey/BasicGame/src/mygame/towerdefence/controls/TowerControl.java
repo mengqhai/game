@@ -13,6 +13,7 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.control.AbstractControl;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 import mygame.towerdefence.data.Charge;
 import mygame.towerdefence.data.CreepData;
 import mygame.towerdefence.data.TowerData;
@@ -69,12 +70,12 @@ public class TowerControl extends AbstractControl {
         }
     }
 
-    private void shootAtCreep(Spatial creep, List<Charge> charges) {
+    private void shootAtCreep(Spatial creep, Queue<Charge> charges) {
         CreepData cData = creep.getUserData(CreepData.KEY);
-        Charge charge = charges.get(0);
+        Charge charge = charges.peek();
         charge.descreaseBullets(1);
         if (charge.getBullets() <= 0) {
-            charges.remove(0);
+            charges.remove();
             System.out.println("Charge empty and removed");
         }
         cData.descreaseHealth(charge.getDamage());

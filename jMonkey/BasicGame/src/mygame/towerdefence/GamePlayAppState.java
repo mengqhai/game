@@ -9,6 +9,7 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.asset.AssetManager;
+import com.jme3.input.InputManager;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
@@ -23,6 +24,10 @@ import mygame.towerdefence.data.CreepData;
 import mygame.towerdefence.data.DataService;
 import mygame.towerdefence.data.PlayerData;
 import mygame.towerdefence.data.TowerData;
+import mygame.towerdefence.input.ChargeListener;
+import mygame.towerdefence.input.InputConstants;
+import mygame.towerdefence.input.Selection;
+import mygame.towerdefence.input.SelectionListener;
 
 /**
  *
@@ -33,8 +38,11 @@ public class GamePlayAppState extends AbstractAppState{
     public static final float SCENE_WIDE =16.5f;
     
     private AssetManager assetManager;
+    private InputManager inputManager;
     private Camera cam;
     private Node rootNode, playerNode, creepNode, towerNode, beamNode;
+    
+    private Selection selection = new Selection();
 
     public GamePlayAppState() {
     }
@@ -65,9 +73,9 @@ public class GamePlayAppState extends AbstractAppState{
         Geometry tower = Utils.createBoxGeomTall(assetManager, name, new Vector3f(x, 1, z), ColorRGBA.Green);
         TowerData tData = DataService.INSTANCE.createTowerData(name);
         tower.setUserData(TowerData.KEY, tData);
-        for (int i=0;i<5;i++) {
+        for (int i=0;i<1;i++) {
             // some test charges
-            tData.getCharges().add(new Charge(2, 3));
+            tData.getCharges().add(new Charge());
         }
         
         tower.addControl(new TowerControl(beamNode, creepNode, assetManager));
@@ -93,20 +101,32 @@ public class GamePlayAppState extends AbstractAppState{
         rootNode.attachChild(beamNode);
     }
     
+    private void initListeners() {
+        SelectionListener sListener = new SelectionListener(inputManager, selection, cam, rootNode);
+        ChargeListener cListener = new ChargeListener(selection);
+        inputManager.addMapping(InputConstants.MAPPING_SELECT, InputConstants.TRIGGER_MOUSE_LEFT);
+        inputManager.addListener(sListener, InputConstants.MAPPING_SELECT);
+        inputManager.addMapping(InputConstants.MAPPING_CHARGE, InputConstants.TRIGGER_MOUSE_RIGHT);
+        inputManager.addListener(cListener, InputConstants.MAPPING_CHARGE);
+    }
+    
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         SimpleApplication sApp = (SimpleApplication)app;
         rootNode = sApp.getRootNode();
         assetManager = sApp.getAssetManager();
+        inputManager = sApp.getInputManager();
         cam = sApp.getCamera();
         sApp.getFlyByCamera().setMoveSpeed(50);
+        sApp.getFlyByCamera().setDragToRotate(true);
+        inputManager.setCursorVisible(true);
 
         initFloor();
         initBeam();
         initPlayer();
         initCreep();
         initTower();
-        
+        initListeners();
         
         
         

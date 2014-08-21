@@ -71,6 +71,10 @@ public class PlayerData implements Savable{
     public synchronized void addBudget(int bonus) {
         this.budget += bonus;
     }
+    
+    public synchronized void descreaseBudget(int price) {
+        this.budget -= price;
+    }
 
     public void write(JmeExporter ex) throws IOException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

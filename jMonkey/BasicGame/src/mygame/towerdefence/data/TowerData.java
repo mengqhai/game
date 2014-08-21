@@ -8,8 +8,8 @@ import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
 import com.jme3.export.Savable;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  *
@@ -20,7 +20,7 @@ public class TowerData  implements Savable{
     
     private int index, range = 8, shootInterval = 2000;
     
-    private List<Charge> charges = new ArrayList<Charge>();
+    private Queue<Charge> charges = new ConcurrentLinkedQueue<Charge>();
     
     TowerData() {
         
@@ -42,7 +42,7 @@ public class TowerData  implements Savable{
         this.range = range;
     }
 
-    public List<Charge> getCharges() {
+    public Queue<Charge> getCharges() {
         return charges;
     }
 

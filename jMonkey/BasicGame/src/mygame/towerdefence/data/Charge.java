@@ -10,8 +10,13 @@ package mygame.towerdefence.data;
  */
 public class Charge {
     
-    private int damage; // damage value
-    private int bullets; // remaining bullets
+    private int damage = 2; // damage value
+    private int bullets = 4; // remaining bullets
+    private int price = 10;
+    
+    public Charge() {
+        
+    }
 
     public Charge(int damage, int bullets) {
         this.damage = damage;
@@ -37,4 +42,13 @@ public class Charge {
     public void descreaseBullets(int num) {
         this.bullets -= num;
     }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
 }
