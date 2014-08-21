@@ -17,6 +17,8 @@ import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
 import mygame.Utils;
 import mygame.towerdefence.controls.CreepControl;
+import mygame.towerdefence.controls.TowerControl;
+import mygame.towerdefence.data.Charge;
 import mygame.towerdefence.data.CreepData;
 import mygame.towerdefence.data.DataService;
 import mygame.towerdefence.data.PlayerData;
@@ -61,7 +63,14 @@ public class GamePlayAppState extends AbstractAppState{
     private void addTower(float x, float z, Node node, int index) {
         String name = "Tower "+index;
         Geometry tower = Utils.createBoxGeomTall(assetManager, name, new Vector3f(x, 1, z), ColorRGBA.Green);
-        tower.setUserData(TowerData.KEY, DataService.INSTANCE.createTowerData(name));
+        TowerData tData = DataService.INSTANCE.createTowerData(name);
+        tower.setUserData(TowerData.KEY, tData);
+        for (int i=0;i<5;i++) {
+            // some test charges
+            tData.getCharges().add(new Charge(2, 3));
+        }
+        
+        tower.addControl(new TowerControl(beamNode, creepNode, assetManager));
         node.attachChild(tower);
     }
     
@@ -78,7 +87,12 @@ public class GamePlayAppState extends AbstractAppState{
         creep.addControl(new CreepControl(creepNode));
         node.attachChild(creep);
     }
-
+    
+    private void initBeam() {
+        beamNode = new Node();
+        rootNode.attachChild(beamNode);
+    }
+    
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         SimpleApplication sApp = (SimpleApplication)app;
@@ -86,14 +100,16 @@ public class GamePlayAppState extends AbstractAppState{
         assetManager = sApp.getAssetManager();
         cam = sApp.getCamera();
         sApp.getFlyByCamera().setMoveSpeed(50);
-        
+
         initFloor();
+        initBeam();
         initPlayer();
-        initTower();
         initCreep();
+        initTower();
         
         
-        beamNode = new Node();
+        
+        
         super.initialize(stateManager, app); 
     }
 

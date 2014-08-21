@@ -13,9 +13,9 @@ import java.io.IOException;
  *
  * @author liuli
  */
-public class CreepData implements Savable{
+public class CreepData implements Savable {
+
     public static final String KEY = "CreepData";
-    
     private int index, health = 10;
     private int bonus = 3;
 
@@ -36,6 +36,10 @@ public class CreepData implements Savable{
 
     public void setHealth(int health) {
         this.health = health;
+    }
+
+    public synchronized void descreaseHealth(int damage) {
+        this.health -= damage;
     }
 
     public int getBonus() {
