@@ -6,6 +6,7 @@ package mygame.model;
 
 import com.jme3.animation.AnimChannel;
 import com.jme3.animation.AnimControl;
+import com.jme3.animation.AnimEventListener;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Node;
@@ -23,6 +24,19 @@ public class JaimeControl extends AbstractControl {
     private AnimChannel channel;
     private static final String ANI_IDLE = "Idle";
     private static final String ANI_WALK = "Walk";
+    private AnimEventListener aListener = new AnimEventListener() {
+        public void onAnimCycleDone(AnimControl control, AnimChannel channel, String animName) {
+            System.out.println("A loop of "+animName+" ended.");
+        }
+
+        public void onAnimChange(AnimControl control, AnimChannel channel, String animName) {
+            if (ANI_WALK.equals(animName)) {
+                System.out.println("Jaime started walking");
+            } else if (ANI_IDLE.equals(animName)) {
+                System.out.println("Jaime started being idle.");
+            }
+        }
+    };
 
     public JaimeControl() {
     }
@@ -30,15 +44,16 @@ public class JaimeControl extends AbstractControl {
     @Override
     public void setSpatial(Spatial spatial) {
         super.setSpatial(spatial);
-        this.player = (Node)spatial;
+        this.player = (Node) spatial;
         control = player.getControl(AnimControl.class);
         for (String anim : control.getAnimationNames()) {
             System.out.println(anim);
         }
         channel = control.createChannel();
         channel.setAnim(ANI_IDLE);
+        control.addListener(aListener);
     }
-    
+
     public void toggleWalk() {
         if (!ANI_WALK.equals(channel.getAnimationName())) {
             channel.setAnim(ANI_WALK);
@@ -46,7 +61,7 @@ public class JaimeControl extends AbstractControl {
             channel.setAnim(ANI_IDLE);
         }
     }
-    
+
     public void move(float x, float y, float z) {
         player.move(x, y, z);
     }
