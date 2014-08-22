@@ -21,17 +21,18 @@ import com.jme3.scene.control.AbstractControl;
  */
 public class SpatialLabelControl extends AbstractControl {
 
-    private Node guiNode;
-    private Camera cam;
-    private BitmapText label;
+    protected Node guiNode;
+    protected Camera cam;
+    protected BitmapText label;
+    protected float visibleDistance=20;
     
     public SpatialLabelControl(Node guiNode, Camera cam, BitmapFont guiFont) {
+        this.guiNode = guiNode;
+        this.cam = cam;
         label = new BitmapText(guiFont);
         label.setColor(ColorRGBA.White);
         label.setSize(guiFont.getCharSet().getRenderedSize()*0.5f);
         guiNode.attachChild(label);
-        this.guiNode = guiNode;
-        this.cam = cam;
     }
 
     public SpatialLabelControl(Node guiNode, Camera cam, BitmapText label) {
@@ -55,7 +56,11 @@ public class SpatialLabelControl extends AbstractControl {
 
         // do not show the lable if 
         float distance = cam.getLocation().distance(spatial.getLocalTranslation());
-        if (distance >= 20 || Camera.FrustumIntersect.Outside.equals(cam.contains(spatial.getWorldBound()))) {
+        if (distance >= visibleDistance || Camera.FrustumIntersect.Outside.equals(cam.contains(spatial.getWorldBound()))) {
+            guiNode.detachChild(label);
+            return;
+        }
+        if (spatial.getParent()==null) {
             guiNode.detachChild(label);
             return;
         }

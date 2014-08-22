@@ -9,6 +9,7 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.asset.AssetManager;
+import com.jme3.font.BitmapFont;
 import com.jme3.input.InputManager;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
@@ -19,7 +20,9 @@ import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
 import mygame.Utils;
 import mygame.towerdefence.controls.CreepControl;
+import mygame.towerdefence.controls.CreepLabelControl;
 import mygame.towerdefence.controls.TowerControl;
+import mygame.towerdefence.controls.TowerLabelControl;
 import mygame.towerdefence.data.Charge;
 import mygame.towerdefence.data.CreepData;
 import mygame.towerdefence.data.DataService;
@@ -41,8 +44,9 @@ public class GamePlayAppState extends AbstractAppState{
     private AssetManager assetManager;
     private InputManager inputManager;
     private Camera cam;
-    private Node rootNode, playerNode, creepNode, towerNode, beamNode;
+    private Node rootNode, guiNode, playerNode, creepNode, towerNode, beamNode;
     private PlayerData playerData;
+    private BitmapFont guiFont;
     
     private Selection selection = new Selection();
 
@@ -71,7 +75,7 @@ public class GamePlayAppState extends AbstractAppState{
         for (int i=0;i<totalTowers;i++) {
             int x = FastMath.nextRandomInt(-5, 5);
             int z = FastMath.nextRandomInt(0, 16);
-            addTower(x, z, towerNode, 0);
+            addTower(x, z, towerNode, i);
         }
         rootNode.attachChild(towerNode);
     }
@@ -87,6 +91,7 @@ public class GamePlayAppState extends AbstractAppState{
         }
         
         tower.addControl(new TowerControl(beamNode, creepNode, assetManager));
+        tower.addControl(new TowerLabelControl(guiNode, cam, guiFont));
         node.attachChild(tower);
     }
     
@@ -104,6 +109,7 @@ public class GamePlayAppState extends AbstractAppState{
         Geometry creep = Utils.createBoxGeom1(assetManager, name, new Vector3f(x, 0.5f, z), ColorRGBA.Black);
         creep.setUserData(CreepData.KEY, DataService.INSTANCE.createCreepData(name));
         creep.addControl(new CreepControl(creepNode));
+        creep.addControl(new CreepLabelControl(guiNode, cam, guiFont));
         node.attachChild(creep);
     }
     
@@ -133,6 +139,8 @@ public class GamePlayAppState extends AbstractAppState{
         sApp.getFlyByCamera().setMoveSpeed(50);
         sApp.getFlyByCamera().setDragToRotate(true);
         inputManager.setCursorVisible(true);
+        guiFont = assetManager.loadFont("Interface/Fonts/cn.fnt");
+        guiNode = sApp.getGuiNode();
 
         initFloor();
         initBeam();
