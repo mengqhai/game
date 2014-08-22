@@ -1,8 +1,6 @@
 package mygame.gui;
 
-import mygame.*;
 import com.jme3.app.SimpleApplication;
-import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
@@ -13,6 +11,7 @@ import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
 import com.jme3.system.AppSettings;
+import com.jme3.ui.Picture;
 
 /**
  * test
@@ -22,6 +21,13 @@ public class GUIMain extends SimpleApplication {
     
     private float distance = 0;
     private BitmapText distanceText;
+    
+    private final String ICON_MARIO_DEFULT = "Interface/Images/Mario-icon.png";
+    private final String ICON_MARIO_EYE_HALF = "Interface/Images/Mario-icon-eye-half.png";
+    private final String ICON_MARIO_CLOSE = "Interface/Images/Mario-icon-eye-close.png";
+    
+    
+    private Picture icon = new Picture("Mario");
 
     public static void main(String[] args) {
         AppSettings settings = new AppSettings(true);
@@ -36,11 +42,17 @@ public class GUIMain extends SimpleApplication {
     private void initGUI() {
         setDisplayFps(false);
         setDisplayStatView(false);
-        guiFont = assetManager.loadFont("Interface/Fonts/Default.fnt");
+        guiFont = assetManager.loadFont("Interface/Fonts/cn.fnt"); //assetManager.loadFont("Interface/Fonts/Default.fnt");
         distanceText = new BitmapText(guiFont);
         distanceText.setSize(guiFont.getCharSet().getRenderedSize());
         distanceText.move(settings.getWidth()/2, settings.getHeight()/2, 0);
         guiNode.attachChild(distanceText);
+        
+        icon.setImage(assetManager, ICON_MARIO_DEFULT, true);
+        icon.setWidth(128);
+        icon.setHeight(128);
+        icon.move(settings.getWidth()/2 -128, settings.getHeight()/2-128, 0);//distanceText.getLocalTranslation().subtract(Vector3f.UNIT_X.mult(128)));
+        guiNode.attachChild(icon);
     }
 
     @Override
@@ -75,7 +87,17 @@ public class GUIMain extends SimpleApplication {
     @Override
     public void simpleUpdate(float tpf) {
         distance = cam.getLocation().distance(Vector3f.ZERO);
-        distanceText.setText("Distance:"+ distance);
+        StringBuilder sb = new StringBuilder("你好Distance:看不见这些字（因为字体里面没有）");
+        sb.append(distance);
+        distanceText.setText(sb.toString());
+        
+        if (distance<10 && distance > 5) {
+            icon.setImage(assetManager, ICON_MARIO_EYE_HALF, true);
+        } else if (distance <=5) {
+            icon.setImage(assetManager, ICON_MARIO_CLOSE, true);
+        } else {
+            icon.setImage(assetManager, ICON_MARIO_DEFULT, true);
+        }
     }
 
     @Override
