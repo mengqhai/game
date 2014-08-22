@@ -39,7 +39,17 @@ public class JaimeControl extends AbstractControl {
         channel.setAnim(ANI_IDLE);
     }
     
+    public void toggleWalk() {
+        if (!ANI_WALK.equals(channel.getAnimationName())) {
+            channel.setAnim(ANI_WALK);
+        } else {
+            channel.setAnim(ANI_IDLE);
+        }
+    }
     
+    public void move(float x, float y, float z) {
+        player.move(x, y, z);
+    }
 
     @Override
     protected void controlUpdate(float tpf) {
