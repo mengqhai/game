@@ -21,6 +21,7 @@ import com.jme3.scene.shape.Box;
 import mygame.Utils;
 import mygame.towerdefence.controls.CreepControl;
 import mygame.towerdefence.controls.CreepLabelControl;
+import mygame.towerdefence.controls.PlayerLabelControl;
 import mygame.towerdefence.controls.TowerControl;
 import mygame.towerdefence.controls.TowerLabelControl;
 import mygame.towerdefence.data.Charge;
@@ -65,6 +66,7 @@ public class GamePlayAppState extends AbstractAppState{
         Geometry player = Utils.createBoxGeomLong(assetManager, name, new Vector3f(0, 0.5f, 0), ColorRGBA.Yellow);
         playerData = DataService.INSTANCE.createPlayerData(name);
         player.setUserData(PlayerData.KEY, playerData);
+        player.addControl(new PlayerLabelControl(guiNode, cam, guiFont));
         playerNode.attachChild(player);
         rootNode.attachChild(playerNode);
     }
