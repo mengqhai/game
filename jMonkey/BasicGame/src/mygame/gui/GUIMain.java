@@ -59,7 +59,7 @@ public class GUIMain extends SimpleApplication {
         guiNode.attachChild(icon);
     }
     
-    private Node labelSpatial(Spatial s) {
+    private Spatial labelSpatial(Spatial s) {
         Node labeledNode = new Node();
         labeledNode.attachChild(s);
         BitmapText label = new BitmapText(guiFont);
@@ -70,6 +70,16 @@ public class GUIMain extends SimpleApplication {
         labeledNode.attachChild(label);
         label.addControl(new BillboardControl());
         return labeledNode;
+    }
+    
+    private Spatial labelSpatialIn2D(Spatial s) {
+        BitmapText label = new BitmapText(guiFont);
+        label.setColor(ColorRGBA.White);
+        label.setSize(0.5f);
+        label.setText(s.getName());
+        guiNode.attachChild(s);
+        s.addControl(new ObjectLabelControl(guiNode, cam, label));
+        return s;
     }
 
     @Override
@@ -97,8 +107,8 @@ public class GUIMain extends SimpleApplication {
         geom2.rotate(roll045);
         
         
-        rootNode.attachChild(this.labelSpatial(geom));
-        rootNode.attachChild(this.labelSpatial(geom2));
+        rootNode.attachChild(this.labelSpatialIn2D(geom));
+        rootNode.attachChild(this.labelSpatialIn2D(geom2));
         
         flyCam.setMoveSpeed(50);
     }
