@@ -16,8 +16,8 @@ import com.jme3.scene.control.AbstractControl;
  *
  * @author qinghai
  */
-public class ObjectLabelControl extends AbstractControl{
-    
+public class ObjectLabelControl extends AbstractControl {
+
     private Node guiNode;
     private Camera cam;
     private BitmapText label;
@@ -27,18 +27,29 @@ public class ObjectLabelControl extends AbstractControl{
         this.cam = cam;
         this.label = label;
     }
-    
-    
 
     @Override
     protected void controlUpdate(float tpf) {
         // http://hub.jmonkeyengine.org/forum/topic/draw-2d-text-in-3d-world/
-        Vector3f location = cam.getScreenCoordinates(spatial.getLocalTranslation());
+        // find the top of the spatial
+
+        // do not show the lable if 
+        float distance = cam.getLocation().distance(spatial.getLocalTranslation());
+        if (distance >= 20 || Camera.FrustumIntersect.Outside.equals(cam.contains(spatial.getWorldBound()))) {
+            guiNode.detachChild(label);
+            return;
+        }
+
+        if (!guiNode.hasChild(label)) {
+            guiNode.attachChild(label);
+        }
+        Vector3f sLoc = spatial.getLocalTranslation();
+        Vector3f topLoc = sLoc.add(0, 1.5f + 0.6f / distance, 0);
+        Vector3f location = cam.getScreenCoordinates(topLoc);
         label.setLocalTranslation(location);
     }
 
     @Override
     protected void controlRender(RenderManager rm, ViewPort vp) {
     }
-    
 }

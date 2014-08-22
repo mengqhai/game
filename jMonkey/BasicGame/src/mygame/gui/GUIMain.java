@@ -75,9 +75,9 @@ public class GUIMain extends SimpleApplication {
     private Spatial labelSpatialIn2D(Spatial s) {
         BitmapText label = new BitmapText(guiFont);
         label.setColor(ColorRGBA.White);
-        label.setSize(0.5f);
+        label.setSize(guiFont.getCharSet().getRenderedSize()*0.5f);
         label.setText(s.getName());
-        guiNode.attachChild(s);
+        guiNode.attachChild(label);
         s.addControl(new ObjectLabelControl(guiNode, cam, label));
         return s;
     }
@@ -100,7 +100,6 @@ public class GUIMain extends SimpleApplication {
         mat2.setColor("Color", ColorRGBA.Yellow);
         geom2.setMaterial(mat2);
         geom2.setLocalTranslation(2, 3, 4);
-        geom2.setLocalScale(0.5f);
 //        float r = FastMath.DEG_TO_RAD * 45f;
 //        geom2.rotate(r, 0, 0);
         Quaternion roll045 = new Quaternion().fromAngleAxis(45f * FastMath.DEG_TO_RAD, Vector3f.UNIT_X);
