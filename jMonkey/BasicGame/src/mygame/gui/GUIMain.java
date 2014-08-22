@@ -9,9 +9,14 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Geometry;
+import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
+import com.jme3.scene.control.BillboardControl;
 import com.jme3.scene.shape.Box;
 import com.jme3.system.AppSettings;
 import com.jme3.ui.Picture;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * test
@@ -25,7 +30,6 @@ public class GUIMain extends SimpleApplication {
     private final String ICON_MARIO_DEFULT = "Interface/Images/Mario-icon.png";
     private final String ICON_MARIO_EYE_HALF = "Interface/Images/Mario-icon-eye-half.png";
     private final String ICON_MARIO_CLOSE = "Interface/Images/Mario-icon-eye-close.png";
-    
     
     private Picture icon = new Picture("Mario");
 
@@ -54,9 +58,24 @@ public class GUIMain extends SimpleApplication {
         icon.move(settings.getWidth()/2 -128, settings.getHeight()/2-128, 0);//distanceText.getLocalTranslation().subtract(Vector3f.UNIT_X.mult(128)));
         guiNode.attachChild(icon);
     }
+    
+    private Node labelSpatial(Spatial s) {
+        Node labeledNode = new Node();
+        labeledNode.attachChild(s);
+        BitmapText label = new BitmapText(guiFont);
+        label.setColor(ColorRGBA.White);
+        label.setSize(0.5f);
+        label.setText(s.getName());
+        label.setLocalTranslation(Vector3f.UNIT_Y.mult(2).add(s.getLocalTranslation()));
+        labeledNode.attachChild(label);
+        label.addControl(new BillboardControl());
+        return labeledNode;
+    }
 
     @Override
     public void simpleInitApp() {
+        initGUI();
+        
         Box b = new Box(1, 1, 1);
         Geometry geom = new Geometry("Box", b);
         
@@ -77,11 +96,11 @@ public class GUIMain extends SimpleApplication {
         Quaternion roll045 = new Quaternion().fromAngleAxis(45f * FastMath.DEG_TO_RAD, Vector3f.UNIT_X);
         geom2.rotate(roll045);
         
-
-        rootNode.attachChild(geom);
-        rootNode.attachChild(geom2);
         
-        initGUI();
+        rootNode.attachChild(this.labelSpatial(geom));
+        rootNode.attachChild(this.labelSpatial(geom2));
+        
+        flyCam.setMoveSpeed(50);
     }
 
     @Override
