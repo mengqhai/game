@@ -15,8 +15,6 @@ import com.jme3.scene.control.BillboardControl;
 import com.jme3.scene.shape.Box;
 import com.jme3.system.AppSettings;
 import com.jme3.ui.Picture;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * test
@@ -73,12 +71,7 @@ public class GUIMain extends SimpleApplication {
     }
     
     private Spatial labelSpatialIn2D(Spatial s) {
-        BitmapText label = new BitmapText(guiFont);
-        label.setColor(ColorRGBA.White);
-        label.setSize(guiFont.getCharSet().getRenderedSize()*0.5f);
-        label.setText(s.getName());
-        guiNode.attachChild(label);
-        s.addControl(new ObjectLabelControl(guiNode, cam, label));
+        s.addControl(new SpatialLabelControl(guiNode, cam, guiFont));
         return s;
     }
 
