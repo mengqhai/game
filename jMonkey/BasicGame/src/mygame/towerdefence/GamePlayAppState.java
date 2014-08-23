@@ -121,7 +121,7 @@ public class GamePlayAppState extends AbstractAppState{
     }
     
     private void initListeners() {
-        SelectionListener sListener = new SelectionListener(inputManager, selection, cam, rootNode);
+        SelectionListener sListener = new SelectionListener(inputManager, assetManager, selection, cam, rootNode);
         ChargeListener cListener = new ChargeListener(selection);
         inputManager.addMapping(InputConstants.MAPPING_SELECT, InputConstants.TRIGGER_MOUSE_LEFT);
         inputManager.addListener(sListener, InputConstants.MAPPING_SELECT);
