@@ -17,6 +17,7 @@ import com.jme3.scene.debug.WireBox;
 import com.jme3.scene.shape.Box;
 import com.jme3.system.AppSettings;
 import com.jme3.ui.Picture;
+import mygame.Utils;
 
 /**
  * test
@@ -101,33 +102,20 @@ public class GUIMain extends SimpleApplication {
         
         Node node1 = new Node();
         node1.attachChild(geom);
-        node1.attachChild(drawBoundBox(geom));
+        node1.attachChild(Utils.drawBoundBox(assetManager, geom2, ColorRGBA.Blue));
         node1.setLocalTranslation(2, 2, 2);
         labelSpatialIn2D(geom);
         rootNode.attachChild(node1);
         
         Node node2 = new Node();
         node2.attachChild(geom2);
-        node2.attachChild(drawBoundBox(geom2));
+        node2.attachChild(Utils.drawBoundBox(assetManager, geom2, ColorRGBA.Blue));
         node2.setLocalTranslation(5, 6, 4);
         labelSpatialIn2D(geom2);
         rootNode.attachChild(node2);
 
         
         flyCam.setMoveSpeed(50);
-    }
-    
-    private Geometry drawBoundBox(Spatial spatial) {
-        // http://hub.jmonkeyengine.org/forum/topic/how-do-draw-a-bounding-volume/
-        WireBox wbx = new WireBox();
-        wbx.fromBoundingBox((BoundingBox)spatial.getWorldBound());
-        Geometry bx = new Geometry("Bound for "+spatial.getName() , wbx);
-        Material mat_box = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        mat_box.setColor("Color", ColorRGBA.Blue);
-        bx.setMaterial(mat_box);
-        bx.updateModelBound();
-        bx.setLocalScale(1.1f);
-        return bx;
     }
 
     @Override
