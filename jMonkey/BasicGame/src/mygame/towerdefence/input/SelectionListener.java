@@ -19,7 +19,6 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.debug.WireBox;
-import mygame.Utils;
 
 /**
  *
@@ -61,10 +60,12 @@ public class SelectionListener implements ActionListener {
         }
 
         WireBox wbx = (WireBox) selectionBox.getMesh();
-        wbx.fromBoundingBox((BoundingBox) selectedObj.getWorldBound());
+        BoundingBox bb= (BoundingBox) selectedObj.getWorldBound();
+        wbx.fromBoundingBox(bb);
         selectionBox.updateModelBound();
-        selectionBox.setLocalScale(1.1f);
-        selectionBox.setLocalTranslation(selectedObj.getLocalTranslation());
+        selectionBox.setLocalScale(1f);
+        //selectionBox.setLocalTranslation(selectedObj.getLocalTranslation());
+        selectionBox.setLocalTranslation(selectedObj.getWorldTranslation());
 
     }
 
@@ -79,12 +80,27 @@ public class SelectionListener implements ActionListener {
             if (results.size() == 0) {
                 return;
             }
-            String selected = results.getClosestCollision().getGeometry().getName();
+            Geometry selectedGeom = results.getClosestCollision().getGeometry();
+            String selected = null;
+            
+            if (selectedGeom.getParent() == rootNode || selectedGeom.getParent().getName() == null) {
+                return;
+            }
+            
+            if ("TowerNode".equals(selectedGeom.getParent().getName())) {
+                selected=selectedGeom.getName();
+            } else if (selectedGeom.getParent().getName().startsWith("Tower ")) {
+                // a single tower's Node
+                selected = selectedGeom.getParent().getName();
+            }
+            if (selected == null) {
+                return;
+            }
             selection.setSelectedName(selected);
             System.out.println("Selected:" + selected);
-            if (selected.startsWith("Tower")) {
+           if (selected.startsWith("Tower")) {
                 updateSelectionBox(selected);
-            }
+           }
         }
     }
 }

@@ -12,12 +12,15 @@ import com.jme3.asset.AssetManager;
 import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
 import com.jme3.input.InputManager;
+import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import com.jme3.system.AppSettings;
 import mygame.Utils;
@@ -43,6 +46,8 @@ import mygame.towerdefence.input.SelectionListener;
 public class GamePlayAppState extends AbstractAppState{
     
     public static final float SCENE_WIDE =16.5f;
+    
+    private final static String TOWER_MODEL = "Textures/mytower/mytower.mesh.j3o";
     
     private AssetManager assetManager;
     private InputManager inputManager;
@@ -74,7 +79,7 @@ public class GamePlayAppState extends AbstractAppState{
     }
     
     private void initTower() {
-        towerNode = new Node();
+        towerNode = new Node("TowerNode");
         int totalTowers = 6;
         for (int i=0;i<totalTowers;i++) {
             int x = FastMath.nextRandomInt(-5, 5);
@@ -86,7 +91,12 @@ public class GamePlayAppState extends AbstractAppState{
     
     private void addTower(float x, float z, Node node, int index) {
         String name = "Tower "+index;
-        Geometry tower = Utils.createBoxGeomTall(assetManager, name, new Vector3f(x, 1, z), ColorRGBA.Green);
+        //Geometry tower = Utils.createBoxGeomTall(assetManager, name, new Vector3f(x, 1, z), ColorRGBA.Green);
+        Spatial tower = assetManager.loadModel(TOWER_MODEL);
+        tower.setName(name);
+        tower.setLocalTranslation(x, 1.1f, z);
+//        Quaternion rotate = new Quaternion().fromAngleAxis(-90*FastMath.DEG_TO_RAD, Vector3f.UNIT_Y);
+//        tower.setLocalRotation(rotate);
         TowerData tData = DataService.INSTANCE.createTowerData(name);
         tower.setUserData(TowerData.KEY, tData);
         for (int i=0;i<1000;i++) {
@@ -120,6 +130,13 @@ public class GamePlayAppState extends AbstractAppState{
     private void initBeam() {
         beamNode = new Node();
         rootNode.attachChild(beamNode);
+    }
+    
+    private void initLight() {
+        DirectionalLight sun = new DirectionalLight();
+        sun.setDirection(Vector3f.UNIT_XYZ.negate());
+        sun.setColor(ColorRGBA.White);
+        rootNode.addLight(sun);
     }
     
     private void initListeners() {
@@ -161,7 +178,7 @@ public class GamePlayAppState extends AbstractAppState{
         initTower();
         initListeners();
         initGui(setting.getWidth(), setting.getHeight());
-        
+        initLight();
         
         
         super.initialize(stateManager, app); 

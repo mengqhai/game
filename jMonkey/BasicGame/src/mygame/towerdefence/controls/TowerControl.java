@@ -42,12 +42,12 @@ public class TowerControl extends AbstractControl {
         if (tData.getCharges().isEmpty()) {
             return;
         }
-        
+
         if (System.currentTimeMillis() - lastShootTime < tData.getShootInterval()) {
             // just shot, too fast, try next loop
             return;
         }
-        
+
         List<Spatial> creeps = creepNode.getChildren();
         List<Spatial> reachable = new ArrayList<Spatial>();
         Spatial closestCreep = null;
@@ -71,6 +71,10 @@ public class TowerControl extends AbstractControl {
     }
 
     private void shootAtCreep(Spatial creep, Queue<Charge> charges) {
+        ;
+        Vector3f toLookAt = new Vector3f(creep.getLocalTranslation())
+                .setY(spatial.getLocalTranslation().getY());
+        spatial.lookAt(toLookAt, Vector3f.UNIT_Y);
         CreepData cData = creep.getUserData(CreepData.KEY);
         Charge charge = charges.peek();
         charge.descreaseBullets(1);
@@ -81,7 +85,7 @@ public class TowerControl extends AbstractControl {
         cData.descreaseHealth(charge.getDamage());
         new BeamControl(beamNode, assetManager, spatial.getLocalTranslation(), creep.getLocalTranslation());
         lastShootTime = System.currentTimeMillis();
-        System.out.println("Shot "+creep.getName()+" at "+lastShootTime);
+        System.out.println("Shot " + creep.getName() + " at " + lastShootTime);
     }
 
     @Override
