@@ -10,6 +10,7 @@ import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.asset.AssetManager;
 import com.jme3.font.BitmapFont;
+import com.jme3.font.BitmapText;
 import com.jme3.input.InputManager;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
@@ -18,6 +19,7 @@ import com.jme3.renderer.Camera;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
+import com.jme3.system.AppSettings;
 import mygame.Utils;
 import mygame.towerdefence.controls.CreepControl;
 import mygame.towerdefence.controls.CreepLabelControl;
@@ -48,7 +50,7 @@ public class GamePlayAppState extends AbstractAppState{
     private Node rootNode, guiNode, playerNode, creepNode, towerNode, beamNode;
     private PlayerData playerData;
     private BitmapFont guiFont;
-    
+    private BitmapText topText;
     private Selection selection = new Selection();
 
     public GamePlayAppState() {
@@ -129,9 +131,17 @@ public class GamePlayAppState extends AbstractAppState{
         inputManager.addListener(cListener, InputConstants.MAPPING_CHARGE);
     }
     
+    private void initGui(float screenWidth, float screenHeight) {
+        topText = new BitmapText(guiFont);
+        topText.setSize(guiFont.getCharSet().getRenderedSize());
+        topText.move(screenWidth - 320, screenHeight - 10, 0);
+        guiNode.attachChild(topText);
+    }
+    
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         SimpleApplication sApp = (SimpleApplication)app;
+        AppSettings setting  = sApp.getContext().getSettings();
         rootNode = sApp.getRootNode();
         assetManager = sApp.getAssetManager();
         inputManager = sApp.getInputManager();
@@ -141,7 +151,7 @@ public class GamePlayAppState extends AbstractAppState{
         sApp.getFlyByCamera().setMoveSpeed(50);
         sApp.getFlyByCamera().setDragToRotate(true);
         inputManager.setCursorVisible(true);
-        guiFont = assetManager.loadFont("Interface/Fonts/cn.fnt");
+        guiFont = assetManager.loadFont("Interface/Fonts/cn.fnt"); //assetManager.loadFont("Interface/Fonts/Default.fnt");
         guiNode = sApp.getGuiNode();
 
         initFloor();
@@ -150,6 +160,7 @@ public class GamePlayAppState extends AbstractAppState{
         initCreep();
         initTower();
         initListeners();
+        initGui(setting.getWidth(), setting.getHeight());
         
         
         
@@ -158,6 +169,8 @@ public class GamePlayAppState extends AbstractAppState{
 
     @Override
     public void update(float tpf) {
+        topText.setText("Health:" + playerData.getHealth()+ " Budget:"+playerData.getBudget());
+        
         if (playerData.getHealth()<=0) {
             System.out.println("Game over");
             playerData.setLastGameWon(false);
