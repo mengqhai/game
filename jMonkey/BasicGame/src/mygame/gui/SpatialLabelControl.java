@@ -24,14 +24,14 @@ public class SpatialLabelControl extends AbstractControl {
     protected Node guiNode;
     protected Camera cam;
     protected BitmapText label;
-    protected float visibleDistance=20;
-    
+    protected float visibleDistance = 20;
+
     public SpatialLabelControl(Node guiNode, Camera cam, BitmapFont guiFont) {
         this.guiNode = guiNode;
         this.cam = cam;
         label = new BitmapText(guiFont);
         label.setColor(ColorRGBA.White);
-        label.setSize(guiFont.getCharSet().getRenderedSize()*0.5f);
+        label.setSize(guiFont.getCharSet().getRenderedSize() * 0.5f);
         guiNode.attachChild(label);
     }
 
@@ -46,8 +46,6 @@ public class SpatialLabelControl extends AbstractControl {
         super.setSpatial(spatial);
         label.setText(spatial.getName());
     }
-    
-    
 
     @Override
     protected void controlUpdate(float tpf) {
@@ -55,12 +53,13 @@ public class SpatialLabelControl extends AbstractControl {
         // find the top of the spatial
 
         // do not show the lable if 
-        float distance = cam.getLocation().distance(spatial.getLocalTranslation());
+        Vector3f sLoc = spatial.getWorldTranslation();
+        float distance = cam.getLocation().distance(sLoc);
         if (distance >= visibleDistance || Camera.FrustumIntersect.Outside.equals(cam.contains(spatial.getWorldBound()))) {
             guiNode.detachChild(label);
             return;
         }
-        if (spatial.getParent()==null) {
+        if (spatial.getParent() == null) {
             guiNode.detachChild(label);
             return;
         }
@@ -68,7 +67,6 @@ public class SpatialLabelControl extends AbstractControl {
         if (!guiNode.hasChild(label)) {
             guiNode.attachChild(label);
         }
-        Vector3f sLoc = spatial.getLocalTranslation();
         Vector3f topLoc = sLoc.add(0, 1.5f + 0.6f / distance, 0);
         Vector3f location = cam.getScreenCoordinates(topLoc);
         label.setLocalTranslation(location);
