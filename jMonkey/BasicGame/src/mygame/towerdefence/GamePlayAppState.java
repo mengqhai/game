@@ -15,7 +15,6 @@ import com.jme3.input.InputManager;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
-import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Geometry;
@@ -49,6 +48,7 @@ public class GamePlayAppState extends AbstractAppState{
     
     private final static String TOWER_MODEL = "Textures/mytower/mytower.mesh.j3o";
     private final static String CREEP_MODEL = "Textures/Sinbad/Sinbad.mesh.j3o";
+    private final static String PLAY_MODEL = "Textures/mybase/mybase.mesh.j3o";
     
     private AssetManager assetManager;
     private InputManager inputManager;
@@ -71,7 +71,9 @@ public class GamePlayAppState extends AbstractAppState{
     private void initPlayer() {
         playerNode = new Node();
         String name = "Player";
-        Geometry player = Utils.createBoxGeomLong(assetManager, name, new Vector3f(0, 0.5f, 0), ColorRGBA.Yellow);
+        //Geometry player = Utils.createBoxGeomLong(assetManager, name, new Vector3f(0, 0.5f, 0), ColorRGBA.Yellow);
+        Spatial player = assetManager.loadModel(PLAY_MODEL);
+        player.setLocalTranslation(new Vector3f(0, 0.5f, 0));
         playerData = DataService.INSTANCE.createPlayerData(name);
         player.setUserData(PlayerData.KEY, playerData);
         player.addControl(new PlayerLabelControl(guiNode, cam, guiFont));

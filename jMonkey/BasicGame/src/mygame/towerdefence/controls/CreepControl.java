@@ -24,6 +24,7 @@ public class CreepControl extends AbstractControl {
     
     private static final String ANI_DRAW_SWORDS = "DrawSwords";
     private static final String ANI_RUN_BASE = "RunBase";
+    private static final String ANI_SLICE = "SliceHorizontal";
     private AnimControl aniCtrl;
     private AnimChannel aniChaTop;
     private AnimChannel aniChaBase;
@@ -42,7 +43,7 @@ public class CreepControl extends AbstractControl {
         aniChaBase = aniCtrl.createChannel();
         
         aniChaBase.setAnim(ANI_RUN_BASE);
-        aniChaTop.setAnim(ANI_DRAW_SWORDS);
+        aniChaTop.setAnim(ANI_SLICE);
     }
     
     
