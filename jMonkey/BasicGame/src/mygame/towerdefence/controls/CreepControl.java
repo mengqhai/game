@@ -46,9 +46,10 @@ public class CreepControl extends AbstractControl {
         
         if (isAlive()) {
             // Alive creep moves to the base
-            Vector3f endPoint = Vector3f.ZERO;
+            Vector3f endPoint = new Vector3f(0, spatial.getLocalTranslation().y, 0);
             Vector3f dir = endPoint.subtract(spatial.getLocalTranslation());
             dir = dir.divide(dir.length()); //make the dir a unit vector
+            spatial.lookAt(endPoint, Vector3f.UNIT_Y);
             spatial.move(dir.mult(tpf));
         } else {
             // die

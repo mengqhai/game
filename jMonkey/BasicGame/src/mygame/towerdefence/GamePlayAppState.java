@@ -48,6 +48,7 @@ public class GamePlayAppState extends AbstractAppState{
     public static final float SCENE_WIDE =16.5f;
     
     private final static String TOWER_MODEL = "Textures/mytower/mytower.mesh.j3o";
+    private final static String CREEP_MODEL = "Textures/Sinbad/Sinbad.mesh.j3o";
     
     private AssetManager assetManager;
     private InputManager inputManager;
@@ -120,7 +121,10 @@ public class GamePlayAppState extends AbstractAppState{
     
     private void addCreep(float x, float z, Node node, int index) {
         String name = "Creep "+index;
-        Geometry creep = Utils.createBoxGeom1(assetManager, name, new Vector3f(x, 0.5f, z), ColorRGBA.Black);
+        //Geometry creep = Utils.createBoxGeom1(assetManager, name, new Vector3f(x, 0.5f, z), ColorRGBA.Black);
+        Spatial creep = assetManager.loadModel(CREEP_MODEL);
+        creep.setName(name);
+        creep.setLocalTranslation(x, 1, z);
         creep.setUserData(CreepData.KEY, DataService.INSTANCE.createCreepData(name));
         creep.addControl(new CreepControl(creepNode));
         creep.addControl(new CreepLabelControl(guiNode, cam, guiFont));
