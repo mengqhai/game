@@ -1,0 +1,16 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Models/HoverTank/tank_diffuse.jpg
+        SpecularMap : Models/HoverTank/tank_specular.jpg
+        NormalMap : Models/HoverTank/tank_normals.png
+        GlowMap : Models/HoverTank/tank_glow_map.jpg
+        Shininess : 100.0
+        GlowColor : 1.0 1.0 1.0 1.0
+        Specular : 1.0 1.0 1.0 1.0
+        Diffuse : 1.0 1.0 1.0 1.0
+        Ambient : 0.0 0.0 0.0 1.0
+        UseMaterialColors : true
+     }
+    AdditionalRenderState {
+    }
+}
