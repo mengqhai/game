@@ -1,0 +1,10 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Repeat Textures/BrickWall/BrickWall_diffuse.jpg
+        Shininess : 100.0
+        UseMaterialColors : false
+        NormalMap : Repeat Textures/BrickWall/BrickWall_normal.jpg
+     }
+    AdditionalRenderState {
+    }
+}
