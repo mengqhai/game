@@ -17,12 +17,12 @@ import com.jme3.system.AppSettings;
  *
  * @author normenhansen
  */
-public class LightingMain extends SimpleApplication {
+public class ShinyMain extends SimpleApplication {
 
     public static void main(String[] args) {
         AppSettings settings = new AppSettings(true);
         settings.setTitle("My test application");
-        LightingMain app = new LightingMain();
+        ShinyMain app = new ShinyMain();
         app.setSettings(settings);
         app.start();
 
@@ -43,8 +43,11 @@ public class LightingMain extends SimpleApplication {
         Geometry sphere = new Geometry("Box2", sphereMesh);
         Material sphereMat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         sphereMat.setBoolean("UseMaterialColors", true);
-        sphereMat.setColor("Diffuse", ColorRGBA.Red);
+        sphereMat.setColor("Diffuse", ColorRGBA.Cyan);
         sphereMat.setColor("Ambient", ColorRGBA.Gray);
+        sphereMat.setColor("Specular", ColorRGBA.White);
+        // Shininess is a value between 1 and 128 that specifies how smooth or rough a surface is.
+        sphereMat.setFloat("Shininess", 8f); // [1,128]
         sphere.setMaterial(sphereMat);
         sphere.setLocalTranslation(2, 3, 4);
         sphere.setLocalScale(0.5f);
