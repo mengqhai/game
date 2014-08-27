@@ -1,0 +1,14 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Textures/Marble_Stone_Texture_Stock_by_Enchantedgal_Stock.jpg
+        Shininess : 100.0
+        UseVertexColor : false
+        UseMaterialColors : true
+        Specular : 1.0 1.0 1.0 1.0
+        GlowColor : 1.0 1.0 1.0 1.0
+        Diffuse : 1.0 1.0 1.0 1.0
+        Ambient : 0.0 0.0 0.0 1.0
+     }
+    AdditionalRenderState {
+    }
+}

@@ -1,0 +1,13 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Textures/Wood_Texture_by_ReaperOfBlood.jpg
+        Shininess : 5.0
+        GlowColor : 1.0 1.0 1.0 1.0
+        UseMaterialColors : true
+        Specular : 0.6 0.6 0.6 1.0
+        Diffuse : 1.0 1.0 1.0 1.0
+        Ambient : 0.0 0.0 0.0 1.0
+     }
+    AdditionalRenderState {
+    }
+}
