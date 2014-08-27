@@ -7,6 +7,11 @@ package mygame.physics;
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.input.KeyInput;
+import com.jme3.input.MouseInput;
+import com.jme3.input.controls.ActionListener;
+import com.jme3.input.controls.KeyTrigger;
+import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.material.Material;
@@ -25,12 +30,21 @@ import com.jme3.system.AppSettings;
  */
 public class PhysicsFallingBricksMain extends SimpleApplication {
 
+    private static final String SHOOT = "shoot";
     private static final float BRICK_LENGTH = 0.4f;
     private static final float BRICK_WIDTH = 0.3f;
     private static final float BRICK_HEIGHT = 0.25f;
     private static final float WALL_WIDTH_BRICK_COUNT = 12;
     private static final float WALL_HEIGHT_BRICK_COUNT = 6;
     private BulletAppState bulletAppState;
+    private ActionListener shootListener = new ActionListener() {
+        public void onAction(String name, boolean isPressed, float tpf) {
+            if (!isPressed) {
+                shootCannonBall();
+            }
+        }
+    };
+    
     /**
      * Matrials for brick, stone, wood
      */
@@ -66,7 +80,7 @@ public class PhysicsFallingBricksMain extends SimpleApplication {
          * A white, directional light source
          */
         DirectionalLight sun = new DirectionalLight();
-        sun.setDirection((new Vector3f(-0.5f, -0.5f, -0.5f)).normalizeLocal());
+        sun.setDirection((new Vector3f(0, -2.5f, -1f)).normalizeLocal());
         sun.setColor(ColorRGBA.White);
         rootNode.addLight(sun);
 
@@ -132,5 +146,26 @@ public class PhysicsFallingBricksMain extends SimpleApplication {
         initLight();
         initFloor();
         initWall();
+        initInput();
+    }
+    
+    private void initInput() {
+        inputManager.addMapping(SHOOT, new KeyTrigger(KeyInput.KEY_SPACE));
+        inputManager.addMapping(SHOOT, new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
+        inputManager.addListener(shootListener, SHOOT);
+    }
+    
+    private void shootCannonBall() {
+        Geometry ballGeo = new Geometry("Cannon ball", ballMesh);
+        ballGeo.setMaterial(stoneMat);
+        ballGeo.setLocalTranslation(cam.getLocation());
+        rootNode.attachChild(ballGeo);
+        RigidBodyControl ballPhy = new RigidBodyControl(5f);
+        ballGeo.addControl(ballPhy);
+        ballPhy.setCcdSweptSphereRadius(0.1f);
+        ballPhy.setCcdMotionThreshold(0.001f);
+        ballPhy.setLinearVelocity(cam.getDirection().mult(50));
+        
+        bulletAppState.getPhysicsSpace().add(ballPhy);
     }
 }
