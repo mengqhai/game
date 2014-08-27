@@ -80,10 +80,10 @@ public class PhysicsFallingBricksMain extends SimpleApplication {
          * A white, directional light source
          */
         DirectionalLight sun = new DirectionalLight();
-        sun.setDirection((new Vector3f(0, -2.5f, -1f)).normalizeLocal());
+        sun.setDirection((new Vector3f(0, -1f, -5f)).normalizeLocal());
         sun.setColor(ColorRGBA.White);
         rootNode.addLight(sun);
-
+        
         /**
          * A white ambient light source.
          */
@@ -115,6 +115,7 @@ public class PhysicsFallingBricksMain extends SimpleApplication {
 //        Material brickMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
 //        brickMat.setColor("Color", ColorRGBA.Blue);
         brickGeo.setMaterial(brickMat);
+        //brickGeo.setMaterial(stoneMat);
         brickGeo.move(position);
         RigidBodyControl brickPhy = new RigidBodyControl(5f);
         brickGeo.addControl(brickPhy);

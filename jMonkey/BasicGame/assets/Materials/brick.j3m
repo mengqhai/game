@@ -1,9 +1,12 @@
 Material My Material : Common/MatDefs/Light/Lighting.j3md {
      MaterialParameters {
-        DiffuseMap : Repeat Textures/BrickWall/BrickWall_diffuse.jpg
+        DiffuseMap : Textures/Texture__Brushed_Metal_by_meiastar.jpg
         Shininess : 100.0
-        UseMaterialColors : false
-        NormalMap : Repeat Textures/BrickWall/BrickWall_normal.jpg
+        UseMaterialColors : true
+        GlowColor : 1.0 1.0 1.0 1.0
+        Specular : 1.0 1.0 1.0 1.0
+        Diffuse : 1.0 1.0 1.0 1.0
+        Ambient : 0.0 0.0 0.0 1.0
      }
     AdditionalRenderState {
     }
