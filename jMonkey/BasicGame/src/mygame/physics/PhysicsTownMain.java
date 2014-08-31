@@ -10,6 +10,8 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.shapes.BoxCollisionShape;
 import com.jme3.bullet.control.BetterCharacterControl;
 import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.collision.CollisionResult;
+import com.jme3.collision.CollisionResults;
 import com.jme3.input.KeyInput;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
@@ -22,12 +24,16 @@ import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
+import com.jme3.math.Ray;
+import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.CameraNode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.control.CameraControl;
 import com.jme3.scene.shape.Box;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -46,12 +52,48 @@ public class PhysicsTownMain extends SimpleApplication implements ActionListener
     private boolean rotateLeft = false, rotateRight = false, forward = false, back = false;
     private float speed = 8;
     Material brickMat, stoneMat, woodMat;
-    private Node crateNode;
+    private Node crateNode = new Node();;
     RigidBodyControl cratePhy;
+    Map<String, RigidBodyControl> cratePhyMap = new HashMap<String, RigidBodyControl>();
     private final float CRATE_LIFTING_TOP = 5;
     private final String MAPPING_LIFT = "LIFT";
+    private final String MAPPING_DROP = "DROP";
+    private final String MAPPING_SELECT = "SELECT";
     private final KeyTrigger E_TRIGGER = new KeyTrigger(KeyInput.KEY_E);
+    private final KeyTrigger R_TRIGGER = new KeyTrigger(KeyInput.KEY_R);
     private final MouseButtonTrigger RMB_TRIGGER = new MouseButtonTrigger(MouseInput.BUTTON_RIGHT);
+    private final MouseButtonTrigger LMB_TRIGGER = new MouseButtonTrigger(MouseInput.BUTTON_LEFT);
+    
+    private ActionListener dropListener = new ActionListener() {
+        public void onAction(String name, boolean isPressed, float tpf) {
+            dropCrate();
+        }
+    };
+    
+    private ActionListener selectListener = new ActionListener() {
+        public void onAction(String name, boolean isPressed, float tpf) {
+            if (!isPressed) {
+                Vector2f click2d = inputManager.getCursorPosition();
+                Vector3f click3d = cam.getWorldCoordinates(click2d, 0);
+                Vector3f dir = cam.getWorldCoordinates(click2d, 1).subtract(click3d);
+                Ray ray = new Ray(click3d, dir);
+                CollisionResults results = new CollisionResults();
+                crateNode.collideWith(ray, results);
+                CollisionResult closest = results.getClosestCollision();
+                if (closest!=null) {
+                    Geometry lastGeo = (Geometry)cratePhy.getUserObject();
+                    lastGeo.setMaterial(woodMat);
+                    Geometry crateGeo = closest.getGeometry();
+                    cratePhy = cratePhyMap.get(crateGeo.getName());
+                    System.out.println("Selected: "+closest.getGeometry().getName());
+                    Material selectMat = crateGeo.getMaterial().clone();
+                    selectMat.setBoolean("Minnaert", true);
+                    crateGeo.setMaterial(selectMat);
+                }
+            }
+        }
+    };
+    
     private AnalogListener pickListener = new AnalogListener() {
         public void onAnalog(String name, float value, float tpf) {
             Vector3f playerLoc = playerNode.getWorldTranslation();
@@ -124,16 +166,17 @@ public class PhysicsTownMain extends SimpleApplication implements ActionListener
     }
 
     private void dropCrate() {
+        String name= "Crate_"+cratePhyMap.size();
         Vector3f size = new Vector3f(1, 1, 1);
         Box crateMesh = new Box(size.x, size.y, size.z);
         BoxCollisionShape cShap = new BoxCollisionShape(size);
-        Geometry crateGeom = new Geometry("Crate", crateMesh);
+        Geometry crateGeom = new Geometry(name, crateMesh);
         crateGeom.move(1, 5, 1);
         crateGeom.setMaterial(woodMat);
         cratePhy = new RigidBodyControl(cShap, 5);
         crateGeom.addControl(cratePhy);
-
-        crateNode = new Node();
+        
+        cratePhyMap.put(name, cratePhy);
         crateNode.attachChild(crateGeom);
         rootNode.attachChild(crateNode);
         bulletAppState.getPhysicsSpace().add(cratePhy);
@@ -171,10 +214,14 @@ public class PhysicsTownMain extends SimpleApplication implements ActionListener
         inputManager.addMapping("Jump", new KeyTrigger(KeyInput.KEY_SPACE));
 
         inputManager.addMapping(MAPPING_LIFT, E_TRIGGER, RMB_TRIGGER);
+        inputManager.addMapping(MAPPING_DROP, R_TRIGGER);
+        inputManager.addMapping(MAPPING_SELECT, LMB_TRIGGER);
 
         inputManager.addListener(this, "Left", "Right");
         inputManager.addListener(this, "Forward", "Back", "Jump");
         inputManager.addListener(pickListener, MAPPING_LIFT);
+        inputManager.addListener(dropListener, MAPPING_DROP);
+        inputManager.addListener(selectListener, MAPPING_SELECT);
     }
 
     @Override

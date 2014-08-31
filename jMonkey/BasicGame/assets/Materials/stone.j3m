@@ -8,6 +8,7 @@ Material My Material : Common/MatDefs/Light/Lighting.j3md {
         GlowColor : 1.0 1.0 1.0 1.0
         Diffuse : 1.0 1.0 1.0 1.0
         Ambient : 0.0 0.0 0.0 1.0
+        Minnaert : false
      }
     AdditionalRenderState {
     }
