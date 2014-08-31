@@ -23,6 +23,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
 import com.jme3.scene.shape.Sphere;
 import com.jme3.system.AppSettings;
+import com.jme3.util.TangentBinormalGenerator;
 
 /**
  *
@@ -61,6 +62,7 @@ public class PhysicsFallingBricksMain extends SimpleApplication {
     static {
         floorMesh = new Box(10f, 0.5f, 5f);
         brickMesh = new Box(BRICK_LENGTH, BRICK_HEIGHT, BRICK_WIDTH);
+        TangentBinormalGenerator.generate(brickMesh);
         ballMesh = new Sphere(32, 32, 0.25f, true, false);
         ballMesh.setTextureMode(Sphere.TextureMode.Projected);
         floorMesh.scaleTextureCoordinates(new Vector2f(4, 4));
