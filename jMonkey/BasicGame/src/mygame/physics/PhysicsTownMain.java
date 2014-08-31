@@ -59,10 +59,18 @@ public class PhysicsTownMain extends SimpleApplication implements ActionListener
     private final String MAPPING_LIFT = "LIFT";
     private final String MAPPING_DROP = "DROP";
     private final String MAPPING_SELECT = "SELECT";
+    
+    
+    private final String ELEVATOR = "ELEVATOR";
+    private static final float TOPFLOOR = 20f;
+    private boolean downward;
+    
     private final KeyTrigger E_TRIGGER = new KeyTrigger(KeyInput.KEY_E);
     private final KeyTrigger R_TRIGGER = new KeyTrigger(KeyInput.KEY_R);
     private final MouseButtonTrigger RMB_TRIGGER = new MouseButtonTrigger(MouseInput.BUTTON_RIGHT);
     private final MouseButtonTrigger LMB_TRIGGER = new MouseButtonTrigger(MouseInput.BUTTON_LEFT);
+    
+    private Geometry platformGeo;
     
     private ActionListener dropListener = new ActionListener() {
         public void onAction(String name, boolean isPressed, float tpf) {
@@ -145,8 +153,10 @@ public class PhysicsTownMain extends SimpleApplication implements ActionListener
         initPlayer();
         initCam();
         initInput();
+        initPlatform();
 
         dropCrate();
+        
     }
 
     private void initPhysics() {
@@ -192,6 +202,19 @@ public class PhysicsTownMain extends SimpleApplication implements ActionListener
         playerControl.setGravity(new Vector3f(0, -10, 0));
         playerNode.addControl(playerControl);
         bulletAppState.getPhysicsSpace().add(playerControl);
+    }
+    
+    private void initPlatform() {
+        Box platformMesh = new Box(2f, 0.5f, 5f);
+        platformGeo = new Geometry(ELEVATOR, platformMesh);
+        platformGeo.setMaterial(stoneMat);
+        platformGeo.move(80, 0, -10);
+        rootNode.attachChild(platformGeo);
+        RigidBodyControl platformPhy = new RigidBodyControl(100.0f);
+        platformGeo.addControl(platformPhy);
+        platformPhy.setFriction(800f);
+        platformPhy.setKinematic(true);
+        bulletAppState.getPhysicsSpace().add(platformPhy);
     }
 
     private void initCam() {
@@ -245,6 +268,36 @@ public class PhysicsTownMain extends SimpleApplication implements ActionListener
             rotateR.multLocal(viewDirection);
         }
         playerControl.setViewDirection(viewDirection);
+        movePlatform(tpf);
+    }
+    
+    private void movePlatformUp(float tpf) {
+        float platformHeight = platformGeo.getLocalTranslation().getY();
+        if (platformHeight < TOPFLOOR) {
+            platformGeo.move(0, tpf, 0);
+            downward = false;
+        } else {
+            downward = true;
+        }
+    }
+    private void movePlatformDown(float tpf) {
+        float platformHeight = platformGeo.getLocalTranslation().getY();
+        if (platformHeight > .5f) {
+            platformGeo.move(0, -tpf * 4, 0);
+            downward = true;
+        } else {
+            downward = false;
+        }
+
+    }
+    
+    private void movePlatform(float tpf) {
+        if (!downward) {
+            movePlatformUp(tpf);
+        }
+        if (downward) {
+            movePlatformDown(tpf);
+        }
     }
 
     public static void main(String[] args) {
