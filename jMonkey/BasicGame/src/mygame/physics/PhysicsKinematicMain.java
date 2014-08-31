@@ -6,20 +6,16 @@ package mygame.physics;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
+import com.jme3.bullet.PhysicsSpace;
+import com.jme3.bullet.PhysicsTickListener;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.bullet.control.RigidBodyControl;
-import com.jme3.input.KeyInput;
-import com.jme3.input.MouseInput;
-import com.jme3.input.controls.ActionListener;
-import com.jme3.input.controls.KeyTrigger;
-import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
-import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
@@ -42,9 +38,10 @@ public class PhysicsKinematicMain extends SimpleApplication {
     private final String ELEVATOR = "elevator";
     private final String BALL = "ball";
     private static final float TOPFLOOR = 6f;
-    private boolean isPlatformOnTop = false;
-    private boolean isBallOnPlatform = false;
+    private volatile boolean downward = false;
+    private volatile boolean isBallOnPlatform = false;
     private Geometry platformGeo;
+    private RigidBodyControl ballPhy;
     private PhysicsCollisionListener collisionListener = new PhysicsCollisionListener() {
         public void collision(PhysicsCollisionEvent event) {
             String nameA = event.getNodeA().getName();
@@ -52,8 +49,23 @@ public class PhysicsKinematicMain extends SimpleApplication {
             if ((BALL.equals(nameA) && ELEVATOR.equals(nameB))
                     || (BALL.equals(nameB) && ELEVATOR.equals(nameA))) {
                 isBallOnPlatform = true;
+            } else if (BALL.equals(nameA) || BALL.equals(nameB)) {
+                isBallOnPlatform = false;
             }
         }
+    };
+    
+    private PhysicsTickListener tickListener = new PhysicsTickListener() {
+
+        public void prePhysicsTick(PhysicsSpace space, float tpf) {
+            if (isBallOnPlatform) {
+                ballPhy.applyImpulse(new Vector3f(.3f, .1f, 0), Vector3f.ZERO);
+            }
+        }
+
+        public void physicsTick(PhysicsSpace space, float tpf) {
+        }
+        
     };
 
     public static void main(String[] args) {
@@ -96,12 +108,12 @@ public class PhysicsKinematicMain extends SimpleApplication {
         floorGeo.move(0, -.5f, 0);
         sceneNode.attachChild(floorGeo);
 
-        Box slopeMesh = new Box(6f, 0.1f, 5f);
+        Box slopeMesh = new Box(10f, 0.1f, 5f);
         TangentBinormalGenerator.generate(slopeMesh);
         Geometry slopeGeo = new Geometry("Slope", slopeMesh);
         slopeGeo.setMaterial(brickMat);
         slopeGeo.rotate(0, 0, FastMath.DEG_TO_RAD * 50);
-        slopeGeo.move(4f, 4f, 0);
+        slopeGeo.move(5f, 5f, 0);
         sceneNode.attachChild(slopeGeo);
 
         Box wallMesh = new Box(5f, 0.4f, 5f);
@@ -114,6 +126,7 @@ public class PhysicsKinematicMain extends SimpleApplication {
 
         RigidBodyControl scenePhy = new RigidBodyControl(0);
         sceneNode.addControl(scenePhy);
+        scenePhy.setFriction(800);
         bulletAppState.getPhysicsSpace().add(scenePhy);
         rootNode.attachChild(sceneNode);
     }
@@ -126,6 +139,7 @@ public class PhysicsKinematicMain extends SimpleApplication {
         rootNode.attachChild(platformGeo);
         RigidBodyControl platformPhy = new RigidBodyControl(100.0f);
         platformGeo.addControl(platformPhy);
+        platformPhy.setFriction(800f);
         platformPhy.setKinematic(true);
         bulletAppState.getPhysicsSpace().add(platformPhy);
     }
@@ -138,7 +152,7 @@ public class PhysicsKinematicMain extends SimpleApplication {
         ballGeo.setMaterial(stoneMat);
         rootNode.attachChild(ballGeo);
 
-        RigidBodyControl ballPhy = new RigidBodyControl(5f);
+        ballPhy = new RigidBodyControl(5f);
         ballGeo.addControl(ballPhy);
         bulletAppState.getPhysicsSpace().add(ballPhy);
         ballPhy.setPhysicsLocation(new Vector3f(0, 10, 0));
@@ -154,38 +168,60 @@ public class PhysicsKinematicMain extends SimpleApplication {
         initPlatform();
         dropBall();
         
+        flyCam.setMoveSpeed(10);
+        
         
         bulletAppState.getPhysicsSpace().addCollisionListener(collisionListener);
+        bulletAppState.getPhysicsSpace().addTickListener(tickListener);
     }
 
     @Override
     public void simpleUpdate(float tpf) {
+//        float platformHeight = platformGeo.getLocalTranslation().getY();
+        if (isBallOnPlatform) {
+            movePlatform(tpf);
+        } else {
+            movePlatformDown(tpf);
+        }
+        
+        
+//        if (isBallOnPlatform && platformHeight < TOPFLOOR) {
+//            platformGeo.move(0, tpf, 0);
+//        }
+//        if (isBallOnPlatform && platformHeight >= TOPFLOOR) {
+//            isPlatformOnTop = true;
+//        }
+//        if (!isBallOnPlatform && platformHeight > 0.5f) {
+//            isPlatformOnTop = false;
+//            platformGeo.move(0, -tpf * 4, 0);
+//        }
+    }
+    
+    
+    private void movePlatformUp(float tpf) {
         float platformHeight = platformGeo.getLocalTranslation().getY();
-        
-        /*
-        if (!isPlatformOnTop && platformHeight < TOPFLOOR) {
+        if (platformHeight < TOPFLOOR) {
             platformGeo.move(0, tpf, 0);
-        };
-        if (!isPlatformOnTop && platformHeight >= TOPFLOOR) {
-            isPlatformOnTop = true;
+            downward = false;
         }
-        if (isPlatformOnTop && platformHeight > .5f) {
+    }
+    private void movePlatformDown(float tpf) {
+        float platformHeight = platformGeo.getLocalTranslation().getY();
+        if (platformHeight > .5f) {
             platformGeo.move(0, -tpf * 4, 0);
+            downward = true;
+        } else {
+            downward = false;
         }
-        if (isPlatformOnTop && platformHeight <= .5f) {
-            isPlatformOnTop = false;
+
+    }
+    
+    private void movePlatform(float tpf) {
+        if (!downward) {
+            movePlatformUp(tpf);
         }
-        */
-        
-        if (isBallOnPlatform && platformHeight < TOPFLOOR) {
-            platformGeo.move(0, tpf, 0);
-        }
-        if (isBallOnPlatform && platformHeight >= TOPFLOOR) {
-            isPlatformOnTop = true;
-        }
-        if (!isBallOnPlatform && platformHeight > 0.5f) {
-            isPlatformOnTop = false;
-            platformGeo.move(0, -tpf * 4, 0);
+        if (downward) {
+            movePlatformDown(tpf);
         }
     }
 }
