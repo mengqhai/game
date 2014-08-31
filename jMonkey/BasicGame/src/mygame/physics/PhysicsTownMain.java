@@ -166,7 +166,7 @@ public class PhysicsTownMain extends SimpleApplication implements ActionListener
         scenePhy = new RigidBodyControl(0f);
         sceneNode.addControl(scenePhy);
         bulletAppState.getPhysicsSpace().add(sceneNode);
-        bulletAppState.setDebugEnabled(true);
+        bulletAppState.setDebugEnabled(false);
     }
 
     private void initMaterial() {
