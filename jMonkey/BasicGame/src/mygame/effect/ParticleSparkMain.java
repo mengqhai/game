@@ -19,7 +19,7 @@ import com.jme3.system.AppSettings;
  *
  * @author qinghai
  */
-public class ParticleDustSmokeMain extends SimpleApplication {
+public class ParticleSparkMain extends SimpleApplication {
 
     private float angle;
     private ParticleEmitter dustEmitter;
@@ -28,7 +28,7 @@ public class ParticleDustSmokeMain extends SimpleApplication {
         AppSettings settings = new AppSettings(true);
         settings.setTitle("My particle dust application");
         settings.setSettingsDialogImage(null);
-        ParticleDustSmokeMain app = new ParticleDustSmokeMain();
+        ParticleSparkMain app = new ParticleSparkMain();
         app.setSettings(settings);
         app.start();
     }
@@ -56,14 +56,22 @@ public class ParticleDustSmokeMain extends SimpleApplication {
         rootNode.attachChild(dustEmitter);
         
         Material dustMat = new Material(assetManager, "Common/MatDefs/Misc/Particle.j3md");
-        dustMat.setTexture("Texture", assetManager.loadTexture("Effects/debris.png"));
+        dustMat.setTexture("Texture", assetManager.loadTexture("Effects/spark.png"));
         dustEmitter.setMaterial(dustMat);
-        dustEmitter.setImagesX(2);
-        dustEmitter.setImagesY(2);
-        dustEmitter.setSelectRandomImage(true);
-        dustEmitter.setRandomAngle(true);
-        dustEmitter.getParticleInfluencer().setVelocityVariation(1f);
-        
+        dustEmitter.setImagesX(1);
+        dustEmitter.setImagesY(1);
+//        dustEmitter.setSelectRandomImage(true);
+//        dustEmitter.setRandomAngle(true);
+        dustEmitter.getParticleInfluencer().setInitialVelocity(new Vector3f(0, 10, 0));
+        dustEmitter.getParticleInfluencer().setVelocityVariation(1.0f);
+        dustEmitter.setStartColor(ColorRGBA.Yellow);
+        dustEmitter.setStartColor(ColorRGBA.Red);
+        dustEmitter.setGravity(0, 50, 0);
+        dustEmitter.setFacingVelocity(true);
+        dustEmitter.setStartSize(0.5f);
+        dustEmitter.setEndSize(0.5f);
+        dustEmitter.setLowLife(.9f);
+        dustEmitter.setHighLife(1.1f);
         
     }
     
