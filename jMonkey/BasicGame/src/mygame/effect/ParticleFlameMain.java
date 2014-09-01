@@ -19,16 +19,16 @@ import com.jme3.system.AppSettings;
  *
  * @author qinghai
  */
-public class ParticleSparkMain extends SimpleApplication {
+public class ParticleFlameMain extends SimpleApplication {
 
     private float angle;
-    private ParticleEmitter dustEmitter;
+    private ParticleEmitter flameEmitter;
 
     public static void main(String[] args) {
         AppSettings settings = new AppSettings(true);
         settings.setTitle("My particle dust application");
         settings.setSettingsDialogImage(null);
-        ParticleSparkMain app = new ParticleSparkMain();
+        ParticleFlameMain app = new ParticleFlameMain();
         app.setSettings(settings);
         app.start();
     }
@@ -52,26 +52,25 @@ public class ParticleSparkMain extends SimpleApplication {
 
     
     private void initEffect() {
-        dustEmitter = new ParticleEmitter("Spark emitter", Type.Triangle, 60);
-        rootNode.attachChild(dustEmitter);
+        flameEmitter = new ParticleEmitter("Spark emitter", Type.Triangle, 30);
+        rootNode.attachChild(flameEmitter);
         
         Material dustMat = new Material(assetManager, "Common/MatDefs/Misc/Particle.j3md");
-        dustMat.setTexture("Texture", assetManager.loadTexture("Effects/spark.png"));
-        dustEmitter.setMaterial(dustMat);
-        dustEmitter.setImagesX(1);
-        dustEmitter.setImagesY(1);
-//        dustEmitter.setSelectRandomImage(true);
-//        dustEmitter.setRandomAngle(true);
-        dustEmitter.getParticleInfluencer().setInitialVelocity(new Vector3f(0, 10, 0));
-        dustEmitter.getParticleInfluencer().setVelocityVariation(1.0f);
-        dustEmitter.setStartColor(ColorRGBA.Yellow);
-        dustEmitter.setEndColor(ColorRGBA.Red);
-        dustEmitter.setGravity(0, 50, 0);
-        dustEmitter.setFacingVelocity(true);
-        dustEmitter.setStartSize(0.5f);
-        dustEmitter.setEndSize(0.5f);
-        dustEmitter.setLowLife(.9f);
-        dustEmitter.setHighLife(1.1f);
+        dustMat.setTexture("Texture", assetManager.loadTexture("Effects/flame.png"));
+        flameEmitter.setMaterial(dustMat);
+        flameEmitter.setImagesX(2);
+        flameEmitter.setImagesY(2);
+        flameEmitter.setSelectRandomImage(true);
+        flameEmitter.setRandomAngle(true);
+        flameEmitter.getParticleInfluencer().setInitialVelocity(new Vector3f(0, 3, 0));
+        flameEmitter.getParticleInfluencer().setVelocityVariation(0.2f);
+        flameEmitter.setStartColor(new ColorRGBA(1,1,.5f,1f));
+        flameEmitter.setEndColor(new ColorRGBA(1,0,0,0));
+        flameEmitter.setGravity(0, 0, 0);
+        flameEmitter.setStartSize(1.5f);
+        flameEmitter.setEndSize(0.05f);
+        flameEmitter.setLowLife(.5f);
+        flameEmitter.setHighLife(2f);
         
     }
     
@@ -87,7 +86,7 @@ public class ParticleSparkMain extends SimpleApplication {
         angle %= FastMath.TWO_PI;
         float x = FastMath.cos(angle)*2;
         float y = FastMath.sin(angle)*2;
-        dustEmitter.setLocalTranslation(x, 0, y);
+        flameEmitter.setLocalTranslation(x, 0, y);
     }
     
     
