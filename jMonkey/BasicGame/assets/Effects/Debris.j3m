@@ -1,0 +1,7 @@
+Material Debris : Common/MatDefs/Misc/Particle.j3md {
+     MaterialParameters {
+        Texture : Effects/debris.png
+     }
+    AdditionalRenderState {
+    }
+}

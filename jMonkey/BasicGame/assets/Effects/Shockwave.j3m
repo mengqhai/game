@@ -1,0 +1,7 @@
+Material Shockwave : Common/MatDefs/Misc/Particle.j3md {
+     MaterialParameters {
+        Texture : Effects/shockwave.png
+     }
+    AdditionalRenderState {
+    }
+}

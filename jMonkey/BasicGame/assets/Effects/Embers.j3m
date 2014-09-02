@@ -1,0 +1,7 @@
+Material Embers : Common/MatDefs/Misc/Particle.j3md {
+     MaterialParameters {
+        Texture : Effects/embers.png
+     }
+    AdditionalRenderState {
+    }
+}
