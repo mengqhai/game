@@ -15,6 +15,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.system.AppSettings;
+import com.jme3.terrain.geomipmap.TerrainLodControl;
 import com.jme3.terrain.geomipmap.TerrainQuad;
 import com.jme3.terrain.heightmap.AbstractHeightMap;
 import com.jme3.terrain.heightmap.HillHeightMap;
@@ -51,12 +52,15 @@ public class TerrainFromMatMain extends SimpleApplication {
     private Node loadTerrain() {
         Material terrainMat = assetManager.loadMaterial("Scenes/terrain.j3m");
         
-        AbstractHeightMap heightMap = loadRandomHeightMap();//loadImageHeightMap();
+        AbstractHeightMap heightMap = loadImageHeightMap();//loadRandomHeightMap();
         
         
         heightMap.load();
         TerrainQuad terrain = new TerrainQuad("terrain", 65, 513, heightMap.getHeightMap());
         terrain.setMaterial(terrainMat);
+        
+        TerrainLodControl lodControl = new TerrainLodControl(terrain, cam);
+        terrain.addControl(lodControl);
         return terrain;
     }
 
