@@ -8,9 +8,11 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.light.DirectionalLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.post.filters.CartoonEdgeFilter;
+import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -31,7 +33,7 @@ import java.util.logging.Logger;
 public class TerrainFromMatMain extends SimpleApplication {
 
     private DirectionalLight sun;
-    private Node terrainNode;
+    private TerrainQuad terrain;
     
     private AbstractHeightMap loadImageHeightMap() {
         Texture heightMapImage = assetManager.loadTexture("Textures/Terrain/heightmap.png");
@@ -49,19 +51,29 @@ public class TerrainFromMatMain extends SimpleApplication {
         }
     }
 
-    private Node loadTerrain() {
+    private TerrainQuad loadTerrain() {
         Material terrainMat = assetManager.loadMaterial("Scenes/terrain.j3m");
         
-        AbstractHeightMap heightMap = loadImageHeightMap();//loadRandomHeightMap();
+        AbstractHeightMap heightMap = loadRandomHeightMap(); //loadImageHeightMap();//;
         
         
         heightMap.load();
-        TerrainQuad terrain = new TerrainQuad("terrain", 65, 513, heightMap.getHeightMap());
-        terrain.setMaterial(terrainMat);
+        TerrainQuad t = new TerrainQuad("terrain", 65, 513, heightMap.getHeightMap());
+        t.setMaterial(terrainMat);
         
-        TerrainLodControl lodControl = new TerrainLodControl(terrain, cam);
-        terrain.addControl(lodControl);
-        return terrain;
+        TerrainLodControl lodControl = new TerrainLodControl(t, cam);
+        t.addControl(lodControl);
+        return t;
+    }
+    
+    private Node loadTree(TerrainQuad t) {
+        Node treeGeo = (Node)assetManager.loadModel("Models/Tree/Tree.mesh.j3o");
+        treeGeo.scale(5);
+        treeGeo.setQueueBucket(RenderQueue.Bucket.Translucent);
+        Vector3f treeLoc = new Vector3f(-30, 0, -30);
+        treeLoc.setY(t.getHeight(new Vector2f(treeLoc.x, treeLoc.y)));
+        treeGeo.setLocalTranslation(treeLoc);
+        return treeGeo;
     }
 
     private void initLight() {
@@ -125,9 +137,11 @@ public class TerrainFromMatMain extends SimpleApplication {
 
 
         //initCartoon();
-        terrainNode = loadTerrain();
-        rootNode.attachChild(terrainNode);
+        terrain = loadTerrain();
+        rootNode.attachChild(terrain);
         initJaime();
+        Node tree = loadTree(terrain);
+        rootNode.attachChild(tree);
         //makeToonish(rootNode);
     }
 
