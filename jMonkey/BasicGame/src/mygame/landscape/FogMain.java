@@ -71,7 +71,7 @@ public class FogMain extends SimpleApplication {
     private Node loadTree(TerrainQuad t) {
         Node treeGeo = (Node) assetManager.loadModel("Models/Tree/Tree.mesh.j3o");
         treeGeo.scale(5);
-        treeGeo.setQueueBucket(RenderQueue.Bucket.Translucent);
+        //treeGeo.setQueueBucket(RenderQueue.Bucket.Translucent);
         Vector3f treeLoc = new Vector3f(-30, 0, -30);
         treeLoc.setY(t.getHeight(new Vector2f(treeLoc.x, treeLoc.y)));
         treeGeo.setLocalTranslation(treeLoc);
