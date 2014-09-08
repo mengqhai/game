@@ -1,0 +1,16 @@
+Material BrickWall2 : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        UseMaterialColors : true
+        GlowColor : 1.0 1.0 1.0 1.0
+        Specular : 1.0 1.0 1.0 1.0
+        Diffuse : 1.0 1.0 1.0 1.0
+        Shininess : 0.0
+        Ambient : 0.4 0.4 0.4 1.0
+        NormalMap : Repeat Textures/BrickWall2/Brick_C1_NRM.jpg
+        LightMap : Repeat Textures/BrickWall2/Brick_C1_OCC.jpg
+        SpecularMap : Repeat Textures/BrickWall2/Brick_C1_SPEC.jpg
+        DiffuseMap : Textures/BrickWall2/Brick_C1_COLOR.jpg
+     }
+    AdditionalRenderState {
+    }
+}

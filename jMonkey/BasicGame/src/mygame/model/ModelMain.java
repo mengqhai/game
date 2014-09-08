@@ -1,6 +1,7 @@
 package mygame.model;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
@@ -11,14 +12,15 @@ import com.jme3.system.AppSettings;
 
 /**
  * test
+ *
  * @author normenhansen
  */
 public class ModelMain extends SimpleApplication {
-    
+
     private static final String MODEL_PATH_J3O = "Textures/test/mymodel.mesh.j3o";
     private static final String MODEL_PATH_ORGE = "Textures/mymodel/mymodel.mesh.xml";
     private static final String MODEL_PATH_WF = "Textures/mymodel/mymodel.obj";
-    
+    private static final String MODEL_MY_ROBOT = "Textures/myrobot/robot.mesh.j3o";
 
     public static void main(String[] args) {
         AppSettings settings = new AppSettings(true);
@@ -26,19 +28,32 @@ public class ModelMain extends SimpleApplication {
         ModelMain app = new ModelMain();
         app.setSettings(settings);
         app.start();
-        
+
     }
 
     @Override
     public void simpleInitApp() {
-        Spatial myModel = assetManager.loadModel(MODEL_PATH_J3O);
-        Material mat = new Material(assetManager,"Common/MatDefs/Misc/ShowNormals.j3md");
+        Spatial myModel = assetManager.loadModel(MODEL_MY_ROBOT);
+        Material mat = new Material(assetManager, "Common/MatDefs/Misc/ShowNormals.j3md");
         //myModel.setMaterial(mat);
         rootNode.attachChild(myModel);
         DirectionalLight sun = new DirectionalLight();
         sun.setDirection(Vector3f.UNIT_XYZ.negate());
         sun.setColor(ColorRGBA.White);
         rootNode.addLight(sun);
+
+//        DirectionalLight sun2 = new DirectionalLight();
+//        sun2.setDirection(Vector3f.UNIT_XYZ);
+//        sun2.setColor(ColorRGBA.White);
+//        rootNode.addLight(sun2);
+
+        /**
+         * A white ambient light source.
+         */
+        AmbientLight ambient = new AmbientLight();
+        ambient.setColor(ColorRGBA.White);
+        rootNode.addLight(ambient);
+
     }
 
     @Override

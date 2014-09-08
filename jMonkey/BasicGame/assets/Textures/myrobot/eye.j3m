@@ -1,0 +1,12 @@
+Material eye : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Textures/myrobot/robot-eye.png
+        GlowColor : 1.0 1.0 1.0 1.0
+        Specular : 1.0 1.0 1.0 1.0
+        Diffuse : 1.0 1.0 1.0 1.0
+        Ambient : 0.6 0.6 0.6 1.0
+        Shininess : 50.0
+     }
+    AdditionalRenderState {
+    }
+}

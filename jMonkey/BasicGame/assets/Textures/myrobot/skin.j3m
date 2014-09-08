@@ -1,0 +1,13 @@
+Material skin : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Textures/myrobot/metal-pattern-texture-tiled.jpg
+        UseMaterialColors : true
+        GlowColor : 1.0 1.0 1.0 1.0
+        Specular : 0.6 0.6 0.6 1.0
+        Diffuse : 1.0 1.0 1.0 1.0
+        Ambient : 0.8 0.8 0.8 1.0
+        Shininess : 10.0
+     }
+    AdditionalRenderState {
+    }
+}
