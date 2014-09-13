@@ -1,0 +1,8 @@
+Material birds : Common/MatDefs/Misc/Particle.j3md {
+     MaterialParameters {
+        GlowColor : 1.0 1.0 1.0 1.0
+        Texture : Textures/birds/birds.png
+     }
+    AdditionalRenderState {
+    }
+}
