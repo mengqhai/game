@@ -1,13 +1,14 @@
 package mygame.model;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.audio.AudioNode;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
-import com.jme3.scene.Spatial;
+import com.jme3.scene.Node;
 import com.jme3.system.AppSettings;
 
 /**
@@ -33,10 +34,17 @@ public class ModelMain extends SimpleApplication {
 
     @Override
     public void simpleInitApp() {
-        Spatial myModel = assetManager.loadModel(MODEL_MY_ROBOT);
+        Node myModel = (Node)assetManager.loadModel(MODEL_MY_ROBOT);
         Material mat = new Material(assetManager, "Common/MatDefs/Misc/ShowNormals.j3md");
         //myModel.setMaterial(mat);
         rootNode.attachChild(myModel);
+        
+        AudioNode audio = (AudioNode)myModel.getChild("AudioNode");
+        if (audio!=null) {
+            audio.play();
+        }
+        
+        
         DirectionalLight sun = new DirectionalLight();
         sun.setDirection(Vector3f.UNIT_XYZ.negate());
         sun.setColor(ColorRGBA.White);
@@ -58,7 +66,8 @@ public class ModelMain extends SimpleApplication {
 
     @Override
     public void simpleUpdate(float tpf) {
-        //TODO: add update code
+        listener.setLocation(cam.getLocation());
+        listener.setRotation(cam.getRotation());
     }
 
     @Override
