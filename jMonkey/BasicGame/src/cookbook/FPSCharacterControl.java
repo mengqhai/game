@@ -36,7 +36,7 @@ public class FPSCharacterControl extends BetterCharacterControl implements Analo
     /**
      *  the current countdown until the character can fire again
      */
-    private float cooldownTime=3f;
+    private float cooldownTime=0.1f;
 
     public FPSCharacterControl(float radius, float height, float mass) {
         super(radius, height, mass);
@@ -131,7 +131,7 @@ public class FPSCharacterControl extends BetterCharacterControl implements Analo
         this.setWalkDirection(walkDirection);
 
         if (cooldown > 0) {
-            cooldown -= cooldown - tpf;
+            cooldown -= tpf;
         }
     }
 
