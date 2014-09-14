@@ -10,5 +10,6 @@ package cookbook;
  */
 public enum InputMapping {
         RotateLeft, RotateRight, LookUp, LookDown, StrafeLeft,
-        StrafeRight, MoveForward, MoveBackward, Jump, Duck
+        StrafeRight, MoveForward, MoveBackward, Jump, Duck,
+        Fire
 }

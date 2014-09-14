@@ -7,6 +7,7 @@ package cookbook;
 import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
+import com.jme3.collision.CollisionResults;
 import com.jme3.input.InputManager;
 import com.jme3.input.KeyInput;
 import com.jme3.input.MouseInput;
@@ -14,14 +15,22 @@ import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.AnalogListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseAxisTrigger;
+import com.jme3.input.controls.MouseButtonTrigger;
+import com.jme3.math.Ray;
+import com.jme3.scene.Geometry;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author liuli
  */
 public class FPSInputAppState extends AbstractAppState implements AnalogListener, ActionListener {
+
     private InputManager inputManager;
     private FPSCharacterControl character;
+    private Application app;
+    private List<Geometry> targets = new ArrayList<Geometry>();
 
     private void addInputMappings() {
         inputManager.addMapping(InputMapping.RotateLeft.name(), new MouseAxisTrigger(MouseInput.AXIS_X, true),
@@ -35,8 +44,9 @@ public class FPSInputAppState extends AbstractAppState implements AnalogListener
         inputManager.addMapping(InputMapping.StrafeRight.name(), new KeyTrigger(KeyInput.KEY_D));
         inputManager.addMapping(InputMapping.MoveForward.name(), new KeyTrigger(KeyInput.KEY_W));
         inputManager.addMapping(InputMapping.MoveBackward.name(), new KeyTrigger(KeyInput.KEY_S));
-        
-        for (InputMapping i: InputMapping.values()) {
+        inputManager.addMapping(InputMapping.Fire.name(), new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
+
+        for (InputMapping i : InputMapping.values()) {
             inputManager.addListener(this, i.name());
         }
     }
@@ -44,6 +54,7 @@ public class FPSInputAppState extends AbstractAppState implements AnalogListener
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         super.initialize(stateManager, app);
+        this.app = app;
         this.inputManager = app.getInputManager();
         inputManager.setCursorVisible(false);
         addInputMappings();
@@ -56,27 +67,50 @@ public class FPSInputAppState extends AbstractAppState implements AnalogListener
     @Override
     public void cleanup() {
         super.cleanup();
-        for (InputMapping i: InputMapping.values()) {
+        for (InputMapping i : InputMapping.values()) {
             if (inputManager.hasMapping(i.name())) {
                 inputManager.deleteMapping(i.name());
             }
         }
         inputManager.removeListener(this);
     }
-    
+
     public void setCharacter(FPSCharacterControl character) {
         this.character = character;
     }
+    
+    public void fire() {
+        Ray r = new Ray(app.getCamera().getLocation(), app.getCamera().getDirection());
+        CollisionResults collRes = new CollisionResults();
+        for (Geometry g: targets) {
+            g.collideWith(r, collRes);
+        }
+        if (collRes.size()>0) {
+            System.out.println("hit "+collRes.getClosestCollision().getContactPoint());
+        }
+        character.onFire();
+    }
 
     public void onAnalog(String name, float value, float tpf) {
-        if (character!=null) {
+        if (character != null) {
             character.onAnalog(name, value, tpf);
         }
     }
 
     public void onAction(String name, boolean isPressed, float tpf) {
-        if (character!=null) {
+        if (character == null) {
+            return;
+        }
+        if (name.equals(InputMapping.Fire.name())) {
+            if (isPressed && character.getCooldown()<=0f) {
+                fire();
+            }
+        } else {
             character.onAction(name, isPressed, tpf);
         }
+    }
+    
+    public List<Geometry> getTargets() {
+        return targets;
     }
 }

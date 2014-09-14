@@ -18,8 +18,8 @@ import com.jme3.scene.control.CameraControl;
 
 /**
  * A character control usually saw in FPS games.
- * 
- * 
+ *
+ *
  * @author liuli
  */
 public class FPSCharacterControl extends BetterCharacterControl implements AnalogListener, ActionListener {
@@ -29,6 +29,14 @@ public class FPSCharacterControl extends BetterCharacterControl implements Analo
     private float sensitivity = 100.0f;
     private Node head;
     private float yaw;
+    /**
+     * the time between shots
+     */
+    private float cooldown;
+    /**
+     *  the current countdown until the character can fire again
+     */
+    private float cooldownTime=3f;
 
     public FPSCharacterControl(float radius, float height, float mass) {
         super(radius, height, mass);
@@ -58,9 +66,9 @@ public class FPSCharacterControl extends BetterCharacterControl implements Analo
         } else if (name.equals(InputMapping.RotateRight.name())) {
             rotateY(-rotateValue);
         } else if (name.equals(InputMapping.LookUp.name())) {
-            lookUpDown(-rotateValue*2);
+            lookUpDown(-rotateValue * 2);
         } else if (name.equals(InputMapping.LookDown.name())) {
-            lookUpDown(rotateValue*2);
+            lookUpDown(rotateValue * 2);
         }
     }
 
@@ -121,5 +129,17 @@ public class FPSCharacterControl extends BetterCharacterControl implements Analo
         }
 
         this.setWalkDirection(walkDirection);
+
+        if (cooldown > 0) {
+            cooldown -= cooldown - tpf;
+        }
+    }
+
+    public void onFire() {
+        cooldown = cooldownTime;
+    }
+    
+    public float getCooldown() {
+        return cooldown;
     }
 }

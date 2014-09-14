@@ -213,13 +213,13 @@ public class FPSCharacterControlPlayMain extends SimpleApplication{
 
     private void initInput() {
 
-        inputManager.addMapping(MAPPING_LIFT, E_TRIGGER, RMB_TRIGGER);
-        inputManager.addMapping(MAPPING_DROP, R_TRIGGER);
-        inputManager.addMapping(MAPPING_SELECT, LMB_TRIGGER);
-
-        inputManager.addListener(pickListener, MAPPING_LIFT);
-        inputManager.addListener(dropListener, MAPPING_DROP);
-        inputManager.addListener(selectListener, MAPPING_SELECT);
+//        inputManager.addMapping(MAPPING_LIFT, E_TRIGGER, RMB_TRIGGER);
+//        inputManager.addMapping(MAPPING_DROP, R_TRIGGER);
+//        inputManager.addMapping(MAPPING_SELECT, LMB_TRIGGER);
+//
+//        inputManager.addListener(pickListener, MAPPING_LIFT);
+//        inputManager.addListener(dropListener, MAPPING_DROP);
+//        inputManager.addListener(selectListener, MAPPING_SELECT);
     }
 
     @Override
