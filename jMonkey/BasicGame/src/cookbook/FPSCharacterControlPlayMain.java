@@ -4,12 +4,10 @@
  */
 package cookbook;
 
-import mygame.physics.*;
 import com.jme3.app.SimpleApplication;
 import com.jme3.asset.plugins.ZipLocator;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.shapes.BoxCollisionShape;
-import com.jme3.bullet.control.BetterCharacterControl;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
@@ -23,15 +21,12 @@ import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.FastMath;
-import com.jme3.math.Quaternion;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.CameraNode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
-import com.jme3.scene.control.CameraControl;
 import com.jme3.scene.shape.Box;
 import java.util.HashMap;
 import java.util.Map;
@@ -150,9 +145,7 @@ public class FPSCharacterControlPlayMain extends SimpleApplication{
         initPlayer();
         initInput();
         initPlatform();
-
         dropCrate();
-        
     }
 
     private void initPhysics() {
@@ -200,7 +193,9 @@ public class FPSCharacterControlPlayMain extends SimpleApplication{
         playerControl.setGravity(new Vector3f(0, -10, 0));
         bulletAppState.getPhysicsSpace().add(playerControl);
         
-        playerControl.registerInput(inputManager);
+        FPSInputAppState iState = new FPSInputAppState();
+        iState.setCharacter(playerControl);
+        stateManager.attach(iState);
     }
     
     private void initPlatform() {

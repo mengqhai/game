@@ -5,13 +5,8 @@
 package cookbook;
 
 import com.jme3.bullet.control.BetterCharacterControl;
-import com.jme3.input.InputManager;
-import com.jme3.input.KeyInput;
-import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.AnalogListener;
-import com.jme3.input.controls.KeyTrigger;
-import com.jme3.input.controls.MouseAxisTrigger;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
@@ -29,16 +24,6 @@ import com.jme3.scene.control.CameraControl;
  */
 public class FPSCharacterControl extends BetterCharacterControl implements AnalogListener, ActionListener {
 
-    public static final String STRAFE_LEFT = "StrafeLeft";
-    public static final String STRAFE_RIGHT = "StrafeRight";
-    public static final String MOVE_FORWARD = "MoveForward";
-    public static final String MOVE_BACKWARD = "MoveBackward";
-    public static final String JUMP = "Jump";
-    public static final String DUCK = "Duck";
-    public static final String ROTATE_LEFT = "RotateLeft";
-    public static final String ROTATE_RIGHT = "RotateRight";
-    public static final String LOOK_UP = "LookUp";
-    public static final String LOOK_DOWN = "LookDown";
     private boolean forward, backward, leftRotate, rightRotate, leftStrafe, rightStrafe;
     private float moveSpeed = 8.0f;
     private float sensitivity = 100.0f;
@@ -65,43 +50,16 @@ public class FPSCharacterControl extends BetterCharacterControl implements Analo
         head.attachChild(camNode);
     }
 
-    public void registerInput(InputManager inputManager) {
-        inputManager.addMapping(ROTATE_LEFT, new MouseAxisTrigger(MouseInput.AXIS_X, true),
-                new KeyTrigger(KeyInput.KEY_LEFT));
-        inputManager.addMapping(ROTATE_RIGHT, new MouseAxisTrigger(MouseInput.AXIS_X, false), new KeyTrigger(KeyInput.KEY_RIGHT));
-        inputManager.addMapping(LOOK_UP, new MouseAxisTrigger(MouseInput.AXIS_Y, false), new KeyTrigger(KeyInput.KEY_UP));
-        inputManager.addMapping(LOOK_DOWN, new MouseAxisTrigger(MouseInput.AXIS_Y, true), new KeyTrigger(KeyInput.KEY_DOWN));
-        inputManager.addMapping(JUMP, new KeyTrigger(KeyInput.KEY_SPACE));
-        inputManager.addMapping(DUCK, new KeyTrigger(KeyInput.KEY_LCONTROL));
-        inputManager.addMapping(STRAFE_LEFT, new KeyTrigger(KeyInput.KEY_A));
-        inputManager.addMapping(STRAFE_RIGHT, new KeyTrigger(KeyInput.KEY_D));
-        inputManager.addMapping(MOVE_FORWARD, new KeyTrigger(KeyInput.KEY_W));
-        inputManager.addMapping(MOVE_BACKWARD, new KeyTrigger(KeyInput.KEY_S));
-        
-        
-        inputManager.addListener(this, STRAFE_LEFT);
-        inputManager.addListener(this, STRAFE_RIGHT);
-        inputManager.addListener(this, ROTATE_LEFT);
-        inputManager.addListener(this, ROTATE_RIGHT);
-        inputManager.addListener(this, LOOK_UP);
-        inputManager.addListener(this, LOOK_DOWN);
-        inputManager.addListener(this, JUMP);
-        inputManager.addListener(this, DUCK);
-        inputManager.addListener(this, MOVE_FORWARD);
-        inputManager.addListener(this, MOVE_BACKWARD);
-        inputManager.setCursorVisible(false);
-    }
-
     @Override
     public void onAnalog(String name, float value, float tpf) {
         float rotateValue = tpf * value * sensitivity;
-        if (name.equals(ROTATE_LEFT)) {
+        if (name.equals(InputMapping.RotateLeft.name())) {
             rotateY(rotateValue);
-        } else if (name.equals(ROTATE_RIGHT)) {
+        } else if (name.equals(InputMapping.RotateRight.name())) {
             rotateY(-rotateValue);
-        } else if (name.equals(LOOK_UP)) {
+        } else if (name.equals(InputMapping.LookUp.name())) {
             lookUpDown(-rotateValue*2);
-        } else if (name.equals(LOOK_DOWN)) {
+        } else if (name.equals(InputMapping.LookDown.name())) {
             lookUpDown(rotateValue*2);
         }
     }
@@ -129,17 +87,17 @@ public class FPSCharacterControl extends BetterCharacterControl implements Analo
     }
 
     public void onAction(String name, boolean isPressed, float tpf) {
-        if (name.equals(STRAFE_LEFT)) {
+        if (name.equals(InputMapping.StrafeLeft.name())) {
             leftStrafe = isPressed;
-        } else if (name.equals(STRAFE_RIGHT)) {
+        } else if (name.equals(InputMapping.StrafeRight.name())) {
             rightStrafe = isPressed;
-        } else if (name.equals(MOVE_FORWARD)) {
+        } else if (name.equals(InputMapping.MoveForward.name())) {
             forward = isPressed;
-        } else if (name.equals(MOVE_BACKWARD)) {
+        } else if (name.equals(InputMapping.MoveBackward.name())) {
             backward = isPressed;
-        } else if (name.equals(JUMP)) {
+        } else if (name.equals(InputMapping.Jump.name())) {
             jump();
-        } else if (name.equals(DUCK)) {
+        } else if (name.equals(InputMapping.Duck.name())) {
             setDucked(isPressed);
         }
     }
