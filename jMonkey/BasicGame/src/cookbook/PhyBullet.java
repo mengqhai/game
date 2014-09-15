@@ -32,6 +32,7 @@ public class PhyBullet implements PhysicsCollisionListener, PhysicsTickListener 
     private float speed = 800f;
     private final static int RANGE = 1500;
     private float distance = 0;
+    private Vector3f hitPoint;
     
     public PhyBullet(Vector3f origin, Vector3f dir, Node parent, PhysicsSpace phySpace) {
         this.origin = origin.clone();
@@ -65,6 +66,10 @@ public class PhyBullet implements PhysicsCollisionListener, PhysicsTickListener 
         System.out.println("Bullet removed:"+bullet.getName());
     }
     
+    public Vector3f getHitPoint() {
+        return hitPoint;
+    }
+    
     public void collision(PhysicsCollisionEvent event) {
         Spatial target = null;
         Vector3f point =null;
@@ -79,6 +84,7 @@ public class PhyBullet implements PhysicsCollisionListener, PhysicsTickListener 
             System.out.println("Hit "+target.getName()+" at "+point);
             if (hitMark!=null) {
                 hitMark.setLocalTranslation(point);
+                hitPoint = point;
             }
             alive = false;
         }

@@ -34,6 +34,7 @@ import java.util.List;
 public class FPSInputAppState extends AbstractAppState implements AnalogListener, ActionListener {
     
     private final String CROSSHAIR_PATH = "Interface/Images/crosshair-sm.png";
+    private final String SPARK_MODEL_PATH = "Effects/Spark.j3o";
 
     private InputManager inputManager;
     private FPSCharacterControl character;
@@ -80,7 +81,8 @@ public class FPSInputAppState extends AbstractAppState implements AnalogListener
     }
     
     protected AbstractBulletManager createBulletManager() {
-        AbstractBulletManager manager =  producePhysicsBulletManager();//produceRayCastingBulletManager(); //produceDefaultBulletManager();
+        AbstractBulletManager manager = producePhysicsBulletManager();//producePhysicsBulletManager();//produceRayCastingBulletManager(); //produceDefaultBulletManager();
+        manager.setHitSpark(app.getAssetManager().loadModel(SPARK_MODEL_PATH));
         Node bulletNode = new Node("Bullet Node");
         app.getRootNode().attachChild(bulletNode);
         bulletNode.addControl(manager);

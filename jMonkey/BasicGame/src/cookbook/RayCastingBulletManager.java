@@ -7,6 +7,7 @@ package cookbook;
 import com.jme3.collision.Collidable;
 import com.jme3.collision.CollisionResults;
 import com.jme3.math.Ray;
+import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
@@ -29,9 +30,13 @@ public class RayCastingBulletManager extends AbstractColTargetBulletManager {
             g.collideWith(r, collRes);
         }
         if (collRes.size() > 0) {
+            Vector3f hitPoint = collRes.getClosestCollision().getContactPoint();
             System.out.println("hit " + collRes.getClosestCollision().getGeometry().getName());
             if (hitMark != null) {
-                hitMark.setLocalTranslation(collRes.getClosestCollision().getContactPoint());
+                hitMark.setLocalTranslation(hitPoint);
+            }
+            if (hitSpark != null) {
+                this.doSpark(hitPoint);
             }
         }
     }

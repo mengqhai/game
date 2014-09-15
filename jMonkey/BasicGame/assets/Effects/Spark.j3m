@@ -1,0 +1,8 @@
+Material Spark : Common/MatDefs/Misc/Particle.j3md {
+     MaterialParameters {
+        Texture : Effects/spark.png
+        GlowColor : 1.0 1.0 1.0 1.0
+     }
+    AdditionalRenderState {
+    }
+}
