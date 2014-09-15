@@ -68,13 +68,19 @@ public class FPSInputAppState extends AbstractAppState implements AnalogListener
         return manager;
     }
     
+    private AbstractBulletManager produceRayCastingBulletManager() {
+        RayCastingBulletManager manager = new RayCastingBulletManager(app.getCamera());
+        manager.setTargets(targets);
+        return manager;
+    }
+    
     private AbstractBulletManager producePhysicsBulletManager() {
         PhyBulletManager manager = new PhyBulletManager(app.getCamera(), app.getStateManager().getState(BulletAppState.class).getPhysicsSpace());
         return manager;
     }
     
     protected AbstractBulletManager createBulletManager() {
-        AbstractBulletManager manager = producePhysicsBulletManager(); //produceDefaultBulletManager();
+        AbstractBulletManager manager =  produceRayCastingBulletManager();//producePhysicsBulletManager(); //produceDefaultBulletManager();
         Node bulletNode = new Node("Bullet Node");
         app.getRootNode().attachChild(bulletNode);
         bulletNode.addControl(manager);

@@ -19,18 +19,12 @@ import java.util.List;
  * @author qinghai
  */
 public class PhyBulletManager extends AbstractBulletManager{
-    private Camera cam;
-    private Spatial hitMark;
     private PhysicsSpace phySpace;
     private List<PhyBullet> bullets = new ArrayList<PhyBullet>();
     
     public PhyBulletManager(Camera cam, PhysicsSpace phySpace) {
-        this.cam = cam;
+        super(cam);
         this.phySpace = phySpace;
-    }
-
-    public void setHitMark(Spatial hitMark) {
-        this.hitMark = hitMark;
     }
     
     public void fire() {

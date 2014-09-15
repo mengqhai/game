@@ -18,15 +18,11 @@ import java.util.List;
  *
  * @author liuli
  */
-public class BulletManager extends AbstractBulletManager{
-    
-    List<Collidable> targets;
+public class BulletManager extends AbstractColTargetBulletManager{
     List<Bullet> bullets;
-    Camera cam;
-    Spatial hitMark;
 
     public BulletManager(Camera cam) {
-        this.cam = cam;
+        super(cam);
         bullets = new ArrayList<Bullet>();
         targets = new ArrayList<Collidable>();
     }
@@ -57,22 +53,6 @@ public class BulletManager extends AbstractBulletManager{
                 System.out.println("Bullet removed");
             }
         }
-    }
-
-    public List<Collidable> getTargets() {
-        return targets;
-    }
-
-    public void setTargets(List<Collidable> targets) {
-        this.targets = targets;
-    }
-
-    public Spatial getHitMark() {
-        return hitMark;
-    }
-
-    public void setHitMark(Spatial hitMark) {
-        this.hitMark = hitMark;
     }
 
     @Override
