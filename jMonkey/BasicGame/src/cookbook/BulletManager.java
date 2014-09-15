@@ -7,6 +7,8 @@ package cookbook;
 import com.jme3.collision.Collidable;
 import com.jme3.collision.CollisionResult;
 import com.jme3.renderer.Camera;
+import com.jme3.renderer.RenderManager;
+import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Spatial;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -16,7 +18,7 @@ import java.util.List;
  *
  * @author liuli
  */
-public class BulletManager{
+public class BulletManager extends AbstractBulletManager{
     
     List<Collidable> targets;
     List<Bullet> bullets;
@@ -38,7 +40,7 @@ public class BulletManager{
         bullets.add(new Bullet(cam.getLocation().clone(), cam.getDirection().clone()));
     }
 
-    public void update(float tpf) {
+    private void doUpdate(float tpf) {
         Iterator<Bullet> iter = bullets.iterator();
         while(iter.hasNext()) {
             Bullet b = iter.next();
@@ -72,6 +74,16 @@ public class BulletManager{
     public void setHitMark(Spatial hitMark) {
         this.hitMark = hitMark;
     }
+
+    @Override
+    protected void controlUpdate(float tpf) {
+        this.doUpdate(tpf);
+    }
+
+    @Override
+    protected void controlRender(RenderManager rm, ViewPort vp) {
+    }
+
     
     
 }

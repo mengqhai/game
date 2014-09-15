@@ -63,7 +63,6 @@ public class Bullet {
         }
         float closestDistance = Float.MAX_VALUE;
         CollisionResults closest = null;
-        System.out.println("-->hit count:"+resultsList.size());
         for (CollisionResults results : resultsList) {
             System.out.println("-->candidate: "+results.getClosestCollision().getGeometry().getName());
             float collisionDistance = results.getClosestCollision().getDistance();

@@ -19,6 +19,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
+import com.jme3.system.AppSettings;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,7 +35,7 @@ public class FPSCharacterControlPlayMain extends SimpleApplication{
     private Node playerNode;
     private FPSCharacterControl playerControl;
     Material brickMat, stoneMat, woodMat;
-    private Node crateNode = new Node();;
+    private Node crateNode = new Node("Crate Node");;
     RigidBodyControl cratePhy;
     Map<String, RigidBodyControl> cratePhyMap = new HashMap<String, RigidBodyControl>();
     
@@ -45,7 +46,7 @@ public class FPSCharacterControlPlayMain extends SimpleApplication{
 
     private Geometry platformGeo;
 
-    private Node loadTown() {
+    private Node loadScene() {
         assetManager.registerLocator("town.zip", ZipLocator.class);
         Node town = (Node) assetManager.loadModel("main.scene");
         rootNode.attachChild(town);
@@ -58,7 +59,7 @@ public class FPSCharacterControlPlayMain extends SimpleApplication{
 
     @Override
     public void simpleInitApp() {
-        sceneNode = (Node) loadTown();
+        sceneNode = (Node) loadScene();
         sceneNode.setLocalTranslation(0, 0, 0);
         //sceneNode.scale(1.5f);
         //rootNode.attachChild(sceneNode);
@@ -138,9 +139,9 @@ public class FPSCharacterControlPlayMain extends SimpleApplication{
         
         FPSInputAppState iState = new FPSInputAppState();
         iState.setCharacter(playerControl);
-//        iState.getTargets().add(crateNode);
-//        iState.getTargets().add(sceneNode);
-        iState.getTargets().add(rootNode);
+        iState.getTargets().add(crateNode);
+        iState.getTargets().add(sceneNode);
+        //iState.getTargets().add(rootNode);
         stateManager.attach(iState);
     }
     
@@ -195,7 +196,10 @@ public class FPSCharacterControlPlayMain extends SimpleApplication{
     }
 
     public static void main(String[] args) {
+        AppSettings settings = new AppSettings(true);
+        settings.setSettingsDialogImage(null);
         FPSCharacterControlPlayMain app = new FPSCharacterControlPlayMain();
+        app.setSettings(settings);
         app.start();
     }
 

@@ -8,6 +8,7 @@ import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
+import com.jme3.bullet.BulletAppState;
 import com.jme3.collision.Collidable;
 import com.jme3.input.InputManager;
 import com.jme3.input.KeyInput;
@@ -38,7 +39,7 @@ public class FPSInputAppState extends AbstractAppState implements AnalogListener
     private FPSCharacterControl character;
     private SimpleApplication app;
     private List<Collidable> targets = new ArrayList<Collidable>();
-    private BulletManager bManager;
+    private AbstractBulletManager bManager;
     
     private Picture crossHair = new Picture("CrossHair");
 
@@ -60,6 +61,25 @@ public class FPSInputAppState extends AbstractAppState implements AnalogListener
             inputManager.addListener(this, i.name());
         }
     }
+    
+    private AbstractBulletManager produceDefaultBulletManager() {
+        BulletManager manager = new BulletManager(app.getCamera());
+        manager.setTargets(targets);
+        return manager;
+    }
+    
+    private AbstractBulletManager producePhysicsBulletManager() {
+        PhyBulletManager manager = new PhyBulletManager(app.getCamera(), app.getStateManager().getState(BulletAppState.class).getPhysicsSpace());
+        return manager;
+    }
+    
+    protected AbstractBulletManager createBulletManager() {
+        AbstractBulletManager manager = producePhysicsBulletManager(); //produceDefaultBulletManager();
+        Node bulletNode = new Node("Bullet Node");
+        app.getRootNode().attachChild(bulletNode);
+        bulletNode.addControl(manager);
+        return manager;
+    }
 
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
@@ -68,8 +88,7 @@ public class FPSInputAppState extends AbstractAppState implements AnalogListener
         this.inputManager = app.getInputManager();
         inputManager.setCursorVisible(false);
         addInputMappings();
-        bManager = new BulletManager(app.getCamera());
-        bManager.setTargets(this.targets);
+        bManager = createBulletManager();
         Node rootNode = this.app.getRootNode();
          /* A colored lit cube. Needs light source! */ 
         Box boxMesh = new Box(0.1f,0.1f, 0.1f); 
@@ -96,7 +115,6 @@ public class FPSInputAppState extends AbstractAppState implements AnalogListener
 
     @Override
     public void update(float tpf) {
-        bManager.update(tpf);
     }
 
     @Override
