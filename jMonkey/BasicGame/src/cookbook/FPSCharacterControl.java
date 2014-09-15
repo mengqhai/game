@@ -41,7 +41,7 @@ public class FPSCharacterControl extends BetterCharacterControl implements Analo
     public FPSCharacterControl(float radius, float height, float mass) {
         super(radius, height, mass);
         head = new Node("gameCharacterControl_head");
-        head.setLocalTranslation(0, 1.8f, 2);
+        head.setLocalTranslation(0, 2.5f, 0);
     }
 
     @Override

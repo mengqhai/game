@@ -129,7 +129,7 @@ public class FPSCharacterControlPlayMain extends SimpleApplication{
         playerNode.setLocalTranslation(new Vector3f(3, 5, 2));
         rootNode.attachChild(playerNode);
 
-        playerControl = new FPSCharacterControl(1.5f, 4, 40f);
+        playerControl = new FPSCharacterControl(1.2f, 3f, 40f);
         playerControl.setCamera(cam);
         playerNode.addControl(playerControl);
         playerControl.setJumpForce(new Vector3f(0, 300, 0));
