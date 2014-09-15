@@ -34,7 +34,7 @@ public class PhyBulletManager extends AbstractBulletManager{
     }
     
     public void fire() {
-        PhyBullet b = new PhyBullet(cam.getLocation().add(cam.getDirection().mult(3f)), cam.getDirection(), this.getBulletNode(), phySpace);
+        PhyBullet b = new PhyBullet(cam.getLocation(), cam.getDirection(), this.getBulletNode(), phySpace);
         b.setHitMark(hitMark);
         bullets.add(b);
     }
